@@ -1,0 +1,13 @@
+nav.navbar {
+  margin-top: 50px;
+  background-color: rgb(0,0,0,0.7);
+  border-top: 1px solid rgba(255,140,14,0.50);
+  border-bottom: 1px solid rgba(255,140,14,0.50);
+}
+.navbar-header > a > img {
+  margin-top: -50px;
+}
+.navbar-nav > li > a:hover {
+  color: #FF8C0D !important;
+  transition: color 0.5s ease 0s;
+}

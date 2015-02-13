@@ -1,0 +1,24 @@
+<div class="modal-header">
+  <h3 class="modal-title">ADD LINKED STAR SYSTEM</h3>
+</div>
+<div class="modal-body">
+  <form class="form-horizontal" name="linkedStarSystemForm">
+    <div class="form-group">
+      <label for="starSystem" class="control-label col-sm-2">System</label>
+      <div class="col-sm-10">
+        <input id="starSystem" name="starSystem" autocomplete ui-items="starSystemList" ng-model="linkedStarSystem.starSystem.name" class="form-control">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="distance" class="control-label col-sm-2">Distance</label>
+      <div class="col-sm-10">
+        <input id="distance" name="distance" ng-model="linkedStarSystem.distance" class="form-control">
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button class="btn eliteButton" ng-click="ok()">SAVE</button>
+  <button class="btn eliteButton" ng-click="cancel()">CANCEL</button>
+</div>

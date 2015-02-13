@@ -1,0 +1,12 @@
+<div class="container">
+  <div class="row">
+    <div class="navbar gridPageHeader">
+      <h2>COMMODITIES</h2>
+
+      <button ng-click="confirmDelete()" type="button" class="btn eliteButton" ng-model="selectedCommodity" ng-disabled="selectedCommodity == null">Delete</button>
+      <button ng-click="showAddModal()" type="button" class="btn eliteButton">Add</button>
+    </div>
+
+    <div class="gridStyle" ng-grid="gridOptions"></div>
+  </div>
+</div>

@@ -1,0 +1,13 @@
+<div class="container">
+  <div class="row">
+    <div class="navbar gridPageHeader">
+      <h2>STARPORTS</h2>
+
+      <button ng-click="confirmDelete()" type="button" class="btn eliteButton" ng-model="selectedStarPort" ng-disabled="selectedStarPort == null">Delete</button>
+      <button ng-click="showEditModal()" type="button" class="btn eliteButton" ng-model="selectedStarPort" ng-disabled="selectedStarPort == null">Edit</button>
+      <button ng-click="showAddModal()" type="button" class="btn eliteButton">Add</button>
+    </div>
+
+    <div class="gridStyle" ng-grid="gridOptions"></div>
+  </div>
+</div>

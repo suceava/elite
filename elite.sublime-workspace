@@ -1,0 +1,854 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"stars",
+				"starsystem"
+			],
+			[
+				"govern",
+				"government"
+			],
+			[
+				"star",
+				"starsystem"
+			],
+			[
+				"sec",
+				"securityList"
+			],
+			[
+				"governm",
+				"governmentList"
+			],
+			[
+				"row",
+				"rowItem"
+			],
+			[
+				"font",
+				"font-family"
+			],
+			[
+				"pro",
+				"producedBy"
+			],
+			[
+				"showA",
+				"showAddEditModal"
+			],
+			[
+				"in",
+				"inline-block"
+			],
+			[
+				"back",
+				"background-color"
+			],
+			[
+				"cli",
+				"clipboardData"
+			],
+			[
+				"cl",
+				"clipboardData"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "server/api/commodity/index.js",
+			"settings":
+			{
+				"buffer_size": 509,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "server/routes.js",
+			"settings":
+			{
+				"buffer_size": 747,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "client/components/navbar/navbar.controller.js",
+			"settings":
+			{
+				"buffer_size": 730,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "client/components/navbar/navbar.html",
+			"settings":
+			{
+				"buffer_size": 1271,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "Searching 19870 files for \"auth/\"\n\n/usr/local/projects/elite/client/index.html:\n   75            <script src=\"app/starsystems/starsystems.controller.js\"></script>\n   76            <script src=\"app/starsystems/starsystems.js\"></script>\n   77:           <script src=\"components/auth/auth.service.js\"></script>\n   78:           <script src=\"components/auth/user.service.js\"></script>\n   79            <script src=\"components/autocomplete/autocomplete.js\"></script>\n   80            <script src=\"components/modal/modal.service.js\"></script>\n\n/usr/local/projects/elite/client/app/login/login.controller.js:\n   25  \n   26      $scope.loginOauth = function(provider) {\n   27:       $window.location.href = '/auth/' + provider;\n   28      };\n   29    });\n\n/usr/local/projects/elite/client/app/signup/signup.controller.js:\n   33  \n   34      $scope.loginOauth = function(provider) {\n   35:       $window.location.href = '/auth/' + provider;\n   36      };\n   37    });\n\n/usr/local/projects/elite/client/bower_components/passport/lib/authenticator.js:\n  151   *     passport.authenticate('basic', { session: false })(req, res);\n  152   *\n  153:  *     app.get('/auth/twitter', passport.authenticate('twitter'), function(req, res) {\n  154   *       // request will be redirected to Twitter\n  155   *     });\n  156:  *     app.get('/auth/twitter/callback', passport.authenticate('twitter'), function(req, res) {\n  157   *       res.json(req.user);\n  158   *     });\n\n/usr/local/projects/elite/client/components/auth/auth.service.js:\n   21          var deferred = $q.defer();\n   22  \n   23:         $http.post('/auth/local', {\n   24            email: user.email,\n   25            password: user.password\n\n/usr/local/projects/elite/dist/public/app/60e4c7ba.app.js:\n    1: \"use strict\";angular.module(\"eliteApp\",[\"ngCookies\",\"ngResource\",\"ngSanitize\",\"ui.router\",\"ui.bootstrap\",\"ngGrid\"]).config([\"$stateProvider\",\"$urlRouterProvider\",\"$locationProvider\",\"$httpProvider\",function(a,b,c,d){b.otherwise(\"/\"),c.html5Mode(!0),d.interceptors.push(\"authInterceptor\")}]).factory(\"authInterceptor\",[\"$rootScope\",\"$q\",\"$cookieStore\",\"$location\",function(a,b,c,d){return{request:function(a){return a.headers=a.headers||{},c.get(\"token\")&&(a.headers.Authorization=\"Bearer \"+c.get(\"token\")),a},responseError:function(a){return 401===a.status?(d.path(\"/login\"),c.remove(\"token\"),b.reject(a)):b.reject(a)}}}]).run([\"$rootScope\",\"$location\",\"Auth\",function(a,b,c){a.$on(\"$stateChangeStart\",function(a,d){c.isLoggedInAsync(function(a){d.authenticate&&!a&&b.path(\"/login\")})})}]),angular.module(\"eliteApp\").controller(\"commoditiesController\",[\"$scope\",\"$http\",\"$modal\",function(a,b,c){var d=function(){b.get(\"api/commodities\").success(function(b){a.commodities=b})},e=function(a){b.get(\"api/commodities/types\").success(function(e){var f=c.open({templateUrl:\"app/commodities/commodity.modal.html\",controller:\"commodityModalController\",resolve:{commodity:function(){return a},types:function(){return e}}});f.result.then(function(a){console.log(a),a._id||b.post(\"api/commodities\",a).success(function(){d()}).error(function(a){console.log(a),alert(a.message)})})})};a.commodities=[],a.selectedCommodity=null,a.gridOptions={data:\"commodities\",groups:[\"type\"],groupsCollapsedByDefault:!1,enableSorting:!1,multiSelect:!1,columnDefs:[{field:\"type\",displayName:\"TYPE\",visible:!1},{field:\"name\",displayName:\"NAME\"},{field:\"producedBy\",displayName:\"PRODUCED BY\"},{field:\"consumedBy\",displayName:\"CONSUMED BY\"}],aggregateTemplate:'<div ng-style=\"rowStyle(row)\" class=\"ngAggregate ng-scope\"><span class=\"ngAggregateText\">{{toUpperCase(row.label)}}</span></div>',afterSelectionChange:function(b){return a.selectedCommodity=b.entity,!0}},a.showAddModal=function(){e({name:\"\",type:\"\",producedBy:[],consumedBy:[]})},a.showEditModal=function(){e(null)},a.confirmDelete=function(){var c=a.selectedCommodity;c&&confirm('Are you sure you want to delete \"'+c.name+'\"?')&&(console.log(\"deleting \"+c._id),b[\"delete\"](\"api/commodities/\"+c._id).success(function(){d()}))},a.toUpperCase=function(a){return a.toUpperCase()},d()}]),angular.module(\"eliteApp\").config([\"$stateProvider\",function(a){a.state(\"commodities\",{url:\"/commodities\",templateUrl:\"app/commodities/commodities.html\",controller:\"commoditiesController\"})}]),angular.module(\"eliteApp\").controller(\"commodityModalController\",[\"$scope\",\"$modalInstance\",\"commodity\",\"types\",function(a,b,c,d){a.commodity=c,a.types=d,a.ok=function(){b.close(a.commodity)},a.cancel=function(){b.dismiss(\"cancel\")}}]),angular.module(\"eliteApp\").controller(\"loginController\",[\"$scope\",\"Auth\",\"$location\",\"$window\",function(a,b,c,d){a.user={},a.errors={},a.login=function(d){a.submitted=!0,d.$valid&&b.login({email:a.user.email,password:a.user.password}).then(function(){c.path(\"/\")})[\"catch\"](function(b){a.errors.other=b.message})},a.loginOauth=function(a){d.location.href=\"/auth/\"+a}}]),angular.module(\"eliteApp\").config([\"$stateProvider\",function(a){a.state(\"login\",{url:\"/login\",templateUrl:\"app/login/login.html\",controller:\"loginController\"})}]),angular.module(\"eliteApp\").controller(\"MainCtrl\",[\"$scope\",\"$http\",function(a,b){a.recentStarSystems=[],a.recentStarPorts=[];var c=function(){b.get(\"/api/starsystems/recent\").success(function(b){a.recentStarSystems=b}),b.get(\"/api/starports/recent\").success(function(b){a.recentStarPorts=b})};a.starSystemsGridOptions={data:\"recentStarSystems\",enableSorting:!1,multiSelect:!1,columnDefs:[{field:\"name\",displayName:\"NAME\"},{field:\"controllingFaction\",displayName:\"FACTION\"},{field:\"government\",displayName:\"GOVERNMENT\"},{field:\"allegiance\",displayName:\"ALLEGIANCE\"},{field:\"security\",displayName:\"SECURITY\"},{field:\"created\",displayName:\"CREATED\"}]},a.starPortsGridOptions={data:\"recentStarPorts\",enableSorting:!1,multiSelect:!1,columnDefs:[{field:\"name\",displayName:\"NAME\"},{field:\"faction\",displayName:\"FACTION\"},{field:\"government\",displayName:\"GOVERNMENT\"},{field:\"allegiance\",displayName:\"ALLEGIANCE\"},{field:\"created\",displayName:\"CREATED\"}]},c()}]),angular.module(\"eliteApp\").config([\"$stateProvider\",function(a){a.state(\"main\",{url:\"/\",templateUrl:\"app/main/main.html\",controller:\"MainCtrl\"})}]),angular.module(\"eliteApp\").controller(\"starportsController\",[\"$scope\",\"$http\",function(a,b){var c=function(){b.get(\"api/starports\").success(function(b){a.starports=b})};a.starports=[],a.selectedStarPort=null,a.gridOptions={data:\"starports\",enableSorting:!1,multiSelect:!1,columnDefs:[{field:\"name\",displayName:\"NAME\"},{field:\"faction\",displayName:\"FACTION\"},{field:\"government\",displayName:\"GOVERNMENT\"},{field:\"allegiance\",displayName:\"ALLEGIANCE\"}],afterSelectionChange:function(b){return a.selectedStarPort=b.entity,!0}},c()}]),angular.module(\"eliteApp\").config([\"$stateProvider\",function(a){a.state(\"starports\",{url:\"/starports\",templateUrl:\"app/starports/starports.html\",controller:\"starportsController\"})}]),angular.module(\"eliteApp\").controller(\"starSystemModalController\",[\"$scope\",\"$modalInstance\",\"starsystem\",\"factionList\",\"governmentList\",\"securityList\",function(a,b,c,d,e,f){a.starsystem=c,a.allegianceList=[\"Alliance\",\"Empire\",\"Federation\",\"Independent\"],a.governmentList=e,a.securityList=f,a.factionList=d,a.ok=function(){b.close(a.starsystem)},a.cancel=function(){b.dismiss(\"cancel\")}}]),angular.module(\"eliteApp\").controller(\"starSystemsController\",[\"$scope\",\"$http\",\"$modal\",function(a,b,c){var d=function(){b.get(\"api/starsystems\").success(function(b){a.starsystems=b})},e=function(){b.get(\"api/starsystems/factionList\").success(function(b){a.factionList=b}),b.get(\"api/starsystems/governmentList\").success(function(b){a.governmentList=b}),b.get(\"api/starsystems/securityList\").success(function(b){a.securityList=b})},f=function(e){var f=c.open({templateUrl:\"app/starsystems/starsystem.modal.html\",controller:\"starSystemModalController\",resolve:{starsystem:function(){return e},factionList:function(){return a.factionList},governmentList:function(){return a.governmentList},securityList:function(){return a.securityList}}});f.result.then(function(a){console.log(a),a._id?b.put(\"api/starsystems/\"+a._id,a).success(function(){d()}).error(function(a){console.log(a),alert(a.message)}):b.post(\"api/starsystems\",a).success(function(){d()}).error(function(a){console.log(a),alert(a.message)})})};a.starsystems=[],a.selectedStarSystem=null,a.gridOptions={data:\"starsystems\",enableSorting:!1,multiSelect:!1,columnDefs:[{field:\"name\",displayName:\"NAME\"},{field:\"controllingFaction\",displayName:\"FACTION\"},{field:\"government\",displayName:\"GOVERNMENT\"},{field:\"allegiance\",displayName:\"ALLEGIANCE\"},{field:\"security\",displayName:\"SECURITY\"}],afterSelectionChange:function(b){return a.selectedStarSystem=b.entity,!0}},a.showAddModal=function(){f({name:\"\"})},a.showEditModal=function(){a.selectedStarSystem&&f(a.selectedStarSystem)},a.confirmDelete=function(){var c=a.selectedStarSystem;c&&confirm('Are you sure you want to delete \"'+c.name+'\"?')&&(console.log(\"deleting \"+c._id),b[\"delete\"](\"api/starsystems/\"+c._id).success(function(){d()}))},d(),e()}]),angular.module(\"eliteApp\").config([\"$stateProvider\",function(a){a.state(\"starsystems\",{url:\"/starsystems\",templateUrl:\"app/starsystems/starsystems.html\",controller:\"starSystemsController\"})}]),angular.module(\"eliteApp\").factory(\"Auth\",[\"$location\",\"$rootScope\",\"$http\",\"User\",\"$cookieStore\",\"$q\",function(a,b,c,d,e,f){var g={};return e.get(\"token\")&&(g=d.get()),{login:function(a,b){var h=b||angular.noop,i=f.defer();return c.post(\"/auth/local\",{email:a.email,password:a.password}).success(function(a){return e.put(\"token\",a.token),g=d.get(),i.resolve(a),h()}).error(function(a){return this.logout(),i.reject(a),h(a)}.bind(this)),i.promise},logout:function(){e.remove(\"token\"),g={}},createUser:function(a,b){var c=b||angular.noop;return d.save(a,function(b){return e.put(\"token\",b.token),g=d.get(),c(a)},function(a){return this.logout(),c(a)}.bind(this)).$promise},changePassword:function(a,b,c){var e=c||angular.noop;return d.changePassword({id:g._id},{oldPassword:a,newPassword:b},function(a){return e(a)},function(a){return e(a)}).$promise},getCurrentUser:function(){return g},isLoggedIn:function(){return g.hasOwnProperty(\"role\")},isLoggedInAsync:function(a){g.hasOwnProperty(\"$promise\")?g.$promise.then(function(){a(!0)})[\"catch\"](function(){a(!1)}):a(g.hasOwnProperty(\"role\")?!0:!1)},isAdmin:function(){return\"admin\"===g.role},getToken:function(){return e.get(\"token\")}}}]),angular.module(\"eliteApp\").factory(\"User\",[\"$resource\",function(a){return a(\"/api/users/:id/:controller\",{id:\"@_id\"},{changePassword:{method:\"PUT\",params:{controller:\"password\"}},get:{method:\"GET\",params:{id:\"me\"}}})}]),angular.module(\"eliteApp\").directive(\"autocomplete\",[\"$timeout\",function(a){return function(b,c,d){c.autocomplete({source:b[d.uiItems],select:function(){a(function(){c.trigger(\"input\")},0)}})}}]),angular.module(\"eliteApp\").factory(\"Modal\",[\"$rootScope\",\"$modal\",function(a,b){function c(c,d){var e=a.$new();return c=c||{},d=d||\"modal-default\",angular.extend(e,c),b.open({templateUrl:\"components/modal/modal.html\",windowClass:d,scope:e})}return{confirm:{\"delete\":function(a){return a=a||angular.noop,function(){var b,d=Array.prototype.slice.call(arguments),e=d.shift();b=c({modal:{dismissable:!0,title:\"Confirm Delete\",html:\"<p>Are you sure you want to delete <strong>\"+e+\"</strong> ?</p>\",buttons:[{classes:\"btn-danger\",text:\"Delete\",click:function(a){b.close(a)}},{classes:\"btn-default\",text:\"Cancel\",click:function(a){b.dismiss(a)}}]}},\"modal-danger\"),b.result.then(function(b){a.apply(b,d)})}}}}}]),angular.module(\"eliteApp\").controller(\"navbarController\",[\"$scope\",\"$location\",function(a,b){a.menu=[{title:\"Home\",link:\"/\"},{title:\"Commodities\",link:\"/commodities\"},{title:\"Star Systems\",link:\"/starsystems\"},{title:\"Star Ports\",link:\"/starports\"}],a.isCollapsed=!0,a.isActive=function(a){return a===b.path()}}]),angular.module(\"eliteApp\").run([\"$templateCache\",function(a){a.put(\"app/commodities/commodities.html\",'<div class=container><div class=row><div class=\"navbar gridPageHeader\"><h2>COMMODITIES</h2><button ng-click=confirmDelete() type=button class=\"btn eliteButton\" ng-model=selectedCommodity ng-disabled=\"selectedCommodity == null\">Delete</button> <button ng-click=showAddModal() type=button class=\"btn eliteButton\">Add</button></div><div class=gridStyle ng-grid=gridOptions></div></div></div>'),a.put(\"app/commodities/commodity.modal.html\",'<div class=modal-header><h3 class=modal-title>ADD COMMODITY</h3></div><div class=modal-body><form class=form-horizontal name=commodityForm><div class=form-group><label for=name class=\"control-label col-sm-2\">Name</label><div class=col-sm-10><input id=name name=name class=\"form-control focus\" ng-model=commodity.name value={{commodity.name}} required></div></div><div class=form-group><label for=type class=\"control-label col-sm-2\">Type</label><div class=col-sm-10><input id=type name=type autocomplete ui-items=types ng-model=commodity.type class=form-control></div></div></form></div><div class=modal-footer><button class=\"btn eliteButton\" ng-click=ok()>SAVE</button> <button class=\"btn eliteButton\" ng-click=cancel()>CANCEL</button></div>'),a.put(\"app/login/login.html\",'<div class=container><div class=row><div class=col-sm-12><h1>Login</h1></div><div class=col-sm-12><form class=form name=form ng-submit=login(form) novalidate><div class=form-group><label>Email</label><input type=email name=email class=form-control ng-model=user.email required></div><div class=form-group><label>Password</label><input type=password name=password class=form-control ng-model=user.password required></div><div class=\"form-group has-error\"><p class=help-block ng-show=\"form.email.$error.required && form.password.$error.required && submitted\">Please enter your email and password.</p><p class=help-block ng-show=\"form.email.$error.email && submitted\">Please enter a valid email.</p><p class=help-block>{{ errors.other }}</p></div><div><button class=\"btn btn-inverse btn-lg btn-login\" type=submit>Login</button> <a class=\"btn btn-default btn-lg btn-register\" href=/signup>Register</a></div></form></div></div></div>'),a.put(\"app/main/main.html\",\"<div class=container><div class=row><h2>RECENT STAR SYSTEMS</h2><div class=gridStyle ng-grid=starSystemsGridOptions></div></div><div class=row><h2>RECENT STAR PORTS</h2><div class=gridStyle ng-grid=starPortsGridOptions></div></div></div>\"),a.put(\"app/starports/starports.html\",'<div class=container><div class=row><div class=\"navbar gridPageHeader\"><h2>STARPORTS</h2><button ng-click=confirmDelete() type=button class=\"btn eliteButton\" ng-model=selectedStarPort ng-disabled=\"selectedStarPort == null\">Delete</button> <button ng-click=showEditModal() type=button class=\"btn eliteButton\" ng-model=selectedStarPort ng-disabled=\"selectedStarPort == null\">Edit</button> <button ng-click=showAddModal() type=button class=\"btn eliteButton\">Add</button></div><div class=gridStyle ng-grid=gridOptions></div></div></div>'),a.put(\"app/starsystems/starsystem.modal.html\",'<div class=modal-header><h3 class=modal-title>ADD STAR SYSTEM</h3></div><div class=modal-body><form class=form-horizontal name=starSystemForm><div class=form-group><label for=name class=\"control-label col-sm-2\">Name</label><div class=col-sm-10><input id=name name=name class=\"form-control focus\" ng-model=starsystem.name value={{starsystem.name}} required></div></div><div class=form-group><label for=controllingFaction class=\"control-label col-sm-2\">Controlling Faction</label><div class=col-sm-10><input id=controllingFaction name=controllingFaction autocomplete ui-items=factionList ng-model=starsystem.controllingFaction class=form-control></div></div><div class=form-group><label for=government class=\"control-label col-sm-2\">Government</label><div class=col-sm-10><input id=government name=government autocomplete ui-items=governmentList ng-model=starsystem.government class=form-control></div></div><div class=form-group><label for=allegiance class=\"control-label col-sm-2\">Allegiance</label><div class=col-sm-10><select id=allegiance name=allegiance class=form-control ng-model=starsystem.allegiance ng-options=\"allegiance as allegiance for allegiance in allegianceList\"></select></div></div><div class=form-group><label for=security class=\"control-label col-sm-2\">Security</label><div class=col-sm-10><input id=security name=security autocomplete ui-items=securityList ng-model=starsystem.security class=form-control></div></div></form></div><div class=modal-footer><button class=\"btn eliteButton\" ng-click=ok()>SAVE</button> <button class=\"btn eliteButton\" ng-click=cancel()>CANCEL</button></div>'),a.put(\"app/starsystems/starsystems.html\",'<div class=container><div class=row><div class=\"navbar gridPageHeader\"><h2>STAR SYSTEMS</h2><button ng-click=confirmDelete() type=button class=\"btn eliteButton\" ng-model=selectedStarSystem ng-disabled=\"selectedStarSystem == null\">Delete</button> <button ng-click=showEditModal() type=button class=\"btn eliteButton\" ng-model=selectedStarSystem ng-disabled=\"selectedStarSystem == null\">Edit</button> <button ng-click=showAddModal() type=button class=\"btn eliteButton\">Add</button></div><div class=gridStyle ng-grid=gridOptions></div></div></div>'),a.put(\"components/modal/modal.html\",'<div class=modal-header><button ng-if=modal.dismissable type=button ng-click=$dismiss() class=close>&times;</button><h4 ng-if=modal.title ng-bind=modal.title class=modal-title></h4></div><div class=modal-body><p ng-if=modal.text ng-bind=modal.text></p><div ng-if=modal.html ng-bind-html=modal.html></div></div><div class=modal-footer><button ng-repeat=\"button in modal.buttons\" ng-class=button.classes ng-click=button.click($event) ng-bind=button.text class=btn></button></div>'),a.put(\"components/navbar/navbar.html\",'<nav class=\"navbar navbar-default navbar-static-top navbar-inverse\" ng-controller=navbarController><div class=container-fluid><div class=navbar-header><a href=\"/\" class=navbar-brand><img alt=\"Elite Logo\" src=\"../../assets/images/eliteLogo.png\"></a></div><div collapse=isCollapsed class=\"navbar-collapse collapse\" id=navbar-main><ul class=\"nav navbar-nav\"><li ng-repeat=\"item in menu\" ng-class=\"{active: isActive(item.link)}\"><a ng-href={{item.link}}>{{item.title}}</a></li></ul></div></div></nav>')}]);\n\n/usr/local/projects/elite/dist/public/bower_components/passport/lib/authenticator.js:\n  151   *     passport.authenticate('basic', { session: false })(req, res);\n  152   *\n  153:  *     app.get('/auth/twitter', passport.authenticate('twitter'), function(req, res) {\n  154   *       // request will be redirected to Twitter\n  155   *     });\n  156:  *     app.get('/auth/twitter/callback', passport.authenticate('twitter'), function(req, res) {\n  157   *       res.json(req.user);\n  158   *     });\n\n/usr/local/projects/elite/dist/server/api/commodity/index.js:\n    3  var express = require('express');\n    4  var controller = require('./commodity.controller');\n    5: var auth = require('../../auth/auth.service');\n    6  \n    7  var router = express.Router();\n\n/usr/local/projects/elite/dist/server/api/user/index.js:\n    4  var controller = require('./user.controller');\n    5  var config = require('../../config/environment');\n    6: var auth = require('../../auth/auth.service');\n    7  \n    8  var router = express.Router();\n\n/usr/local/projects/elite/node_modules/connect-mongo/node_modules/mongodb/lib/mongodb/db.js:\n   23  \n   24    // Authentication methods\n   25:   , mongodb_cr_authenticate = require('./auth/mongodb_cr.js').authenticate\n   26:   , mongodb_gssapi_authenticate = require('./auth/mongodb_gssapi.js').authenticate\n   27:   , mongodb_sspi_authenticate = require('./auth/mongodb_sspi.js').authenticate\n   28:   , mongodb_plain_authenticate = require('./auth/mongodb_plain.js').authenticate\n   29:   , mongodb_x509_authenticate = require('./auth/mongodb_x509.js').authenticate\n   30:   , mongodb_scram_authenticate = require('./auth/mongodb_scram.js').authenticate;\n   31  \n   32  var hasKerberos = false;\n\n/usr/local/projects/elite/node_modules/connect-mongo/node_modules/mongodb/lib/mongodb/connection/base.js:\n    2    , inherits = require('util').inherits\n    3    , utils = require('../utils')\n    4:   , mongodb_cr_authenticate = require('../auth/mongodb_cr.js').authenticate\n    5:   , mongodb_gssapi_authenticate = require('../auth/mongodb_gssapi.js').authenticate\n    6:   , mongodb_sspi_authenticate = require('../auth/mongodb_sspi.js').authenticate\n    7:   , mongodb_plain_authenticate = require('../auth/mongodb_plain.js').authenticate\n    8:   , mongodb_x509_authenticate = require('../auth/mongodb_x509.js').authenticate\n    9:   , mongodb_scram_authenticate = require('../auth/mongodb_scram.js').authenticate;\n   10  \n   11  var id = 0;\n\n/usr/local/projects/elite/node_modules/grunt-google-cdn/node_modules/bower/node_modules/bower-registry-client/node_modules/request/README.md:\n  388      , consumer_secret: CONSUMER_SECRET\n  389      }\n  390:   , url = 'https://api.twitter.com/oauth/request_token'\n  391    ;\n  392  request.post({url:url, oauth:oauth}, function (e, r, body) {\n  ...\n  402        , verifier: access_token.oauth_verifier\n  403        }\n  404:     , url = 'https://api.twitter.com/oauth/access_token'\n  405      ;\n  406    request.post({url:url, oauth:oauth}, function (e, r, body) {\n\n/usr/local/projects/elite/node_modules/grunt-google-cdn/node_modules/bower/node_modules/bower-registry-client/node_modules/request/examples/README.md:\n    7  \n    8  - http://oauth.googlecode.com/svn/spec/ext/session/1.0/drafts/1/spec.html#anchor4\n    9: - https://developer.yahoo.com/oauth/guide/oauth-refreshaccesstoken.html\n   10  \n   11  ```js\n   12: request.post('https://api.login.yahoo.com/oauth/v2/get_token', {\n   13    oauth: {\n   14      consumer_key: '...',\n\n/usr/local/projects/elite/node_modules/grunt-google-cdn/node_modules/bower/node_modules/bower-registry-client/node_modules/request/node_modules/oauth-sign/index.js:\n   43  \n   44  function generateBase (httpMethod, base_uri, params) {\n   45:   // adapted from https://dev.twitter.com/docs/auth/oauth and \n   46:   // https://dev.twitter.com/docs/auth/creating-signature\n   47  \n   48    // Parameter normalization\n\n/usr/local/projects/elite/node_modules/grunt-google-cdn/node_modules/bower/node_modules/bower-registry-client/node_modules/request/node_modules/oauth-sign/test.js:\n    4    ;\n    5  \n    6: // Tests from Twitter documentation https://dev.twitter.com/docs/auth/oauth\n    7  \n    8: var reqsign = hmacsign('POST', 'https://api.twitter.com/oauth/request_token', \n    9    { oauth_callback: 'http://localhost:3005/the_dance/process_callback?service_provider_id=11'\n   10    , oauth_consumer_key: 'GDdmIQH6jhtmLUypg82g'\n   ..\n   19  assert.equal(reqsign, '8wUi7m5HFQy76nowoCThusfgB+Q=')\n   20  \n   21: var accsign = hmacsign('POST', 'https://api.twitter.com/oauth/access_token',\n   22    { oauth_consumer_key: 'GDdmIQH6jhtmLUypg82g'\n   23    , oauth_nonce: '9zWH6qe0qG7Lc1telCn7FhUbLyVdjEaL3MO5uHxn8'\n\n/usr/local/projects/elite/node_modules/grunt-google-cdn/node_modules/bower/node_modules/request/README.md:\n  266      , consumer_secret: CONSUMER_SECRET\n  267      }\n  268:   , url = 'https://api.twitter.com/oauth/request_token'\n  269    ;\n  270  request.post({url:url, oauth:oauth}, function (e, r, body) {\n  ...\n  280        , verifier: access_token.oauth_verifier\n  281        }\n  282:     , url = 'https://api.twitter.com/oauth/access_token'\n  283      ;\n  284    request.post({url:url, oauth:oauth}, function (e, r, body) {\n\n/usr/local/projects/elite/node_modules/grunt-google-cdn/node_modules/bower/node_modules/request/node_modules/oauth-sign/index.js:\n   39  \n   40  function hmacsign (httpMethod, base_uri, params, consumer_secret, token_secret) {\n   41:   // adapted from https://dev.twitter.com/docs/auth/oauth and \n   42:   // https://dev.twitter.com/docs/auth/creating-signature\n   43  \n   44    // Parameter normalization\n\n/usr/local/projects/elite/node_modules/grunt-google-cdn/node_modules/bower/node_modules/request/node_modules/oauth-sign/test.js:\n    4    ;\n    5  \n    6: // Tests from Twitter documentation https://dev.twitter.com/docs/auth/oauth\n    7  \n    8: var reqsign = hmacsign('POST', 'https://api.twitter.com/oauth/request_token', \n    9    { oauth_callback: 'http://localhost:3005/the_dance/process_callback?service_provider_id=11'\n   10    , oauth_consumer_key: 'GDdmIQH6jhtmLUypg82g'\n   ..\n   19  assert.equal(reqsign, '8wUi7m5HFQy76nowoCThusfgB+Q=')\n   20  \n   21: var accsign = hmacsign('POST', 'https://api.twitter.com/oauth/access_token',\n   22    { oauth_consumer_key: 'GDdmIQH6jhtmLUypg82g'\n   23    , oauth_nonce: '9zWH6qe0qG7Lc1telCn7FhUbLyVdjEaL3MO5uHxn8'\n\n/usr/local/projects/elite/node_modules/grunt-protractor-runner/node_modules/protractor/node_modules/request/README.md:\n  165      , consumer_secret: CONSUMER_SECRET\n  166      }\n  167:   , url = 'https://api.twitter.com/oauth/request_token'\n  168    ;\n  169  request.post({url:url, oauth:oauth}, function (e, r, body) {\n  ...\n  179        , verifier: access_token.oauth_verifier\n  180        }\n  181:     , url = 'https://api.twitter.com/oauth/access_token'\n  182      ;\n  183    request.post({url:url, oauth:oauth}, function (e, r, body) {\n\n/usr/local/projects/elite/node_modules/grunt-protractor-runner/node_modules/protractor/node_modules/request/node_modules/oauth-sign/index.js:\n   18  \n   19  function hmacsign (httpMethod, base_uri, params, consumer_secret, token_secret) {\n   20:   // adapted from https://dev.twitter.com/docs/auth/oauth and \n   21:   // https://dev.twitter.com/docs/auth/creating-signature\n   22  \n   23    var querystring = Object.keys(params).sort().map(function(key){\n\n/usr/local/projects/elite/node_modules/grunt-protractor-runner/node_modules/protractor/node_modules/request/node_modules/oauth-sign/test.js:\n    4    ;\n    5  \n    6: // Tests from Twitter documentation https://dev.twitter.com/docs/auth/oauth\n    7  \n    8: var reqsign = hmacsign('POST', 'https://api.twitter.com/oauth/request_token', \n    9    { oauth_callback: 'http://localhost:3005/the_dance/process_callback?service_provider_id=11'\n   10    , oauth_consumer_key: 'GDdmIQH6jhtmLUypg82g'\n   ..\n   19  assert.equal(reqsign, '8wUi7m5HFQy76nowoCThusfgB+Q=')\n   20  \n   21: var accsign = hmacsign('POST', 'https://api.twitter.com/oauth/access_token',\n   22    { oauth_consumer_key: 'GDdmIQH6jhtmLUypg82g'\n   23    , oauth_nonce: '9zWH6qe0qG7Lc1telCn7FhUbLyVdjEaL3MO5uHxn8'\n\n/usr/local/projects/elite/node_modules/karma-phantomjs-launcher/node_modules/phantomjs/node_modules/request/README.md:\n  266      , consumer_secret: CONSUMER_SECRET\n  267      }\n  268:   , url = 'https://api.twitter.com/oauth/request_token'\n  269    ;\n  270  request.post({url:url, oauth:oauth}, function (e, r, body) {\n  ...\n  280        , verifier: access_token.oauth_verifier\n  281        }\n  282:     , url = 'https://api.twitter.com/oauth/access_token'\n  283      ;\n  284    request.post({url:url, oauth:oauth}, function (e, r, body) {\n\n/usr/local/projects/elite/node_modules/karma-phantomjs-launcher/node_modules/phantomjs/node_modules/request/node_modules/oauth-sign/index.js:\n   39  \n   40  function hmacsign (httpMethod, base_uri, params, consumer_secret, token_secret) {\n   41:   // adapted from https://dev.twitter.com/docs/auth/oauth and \n   42:   // https://dev.twitter.com/docs/auth/creating-signature\n   43  \n   44    // Parameter normalization\n\n/usr/local/projects/elite/node_modules/karma-phantomjs-launcher/node_modules/phantomjs/node_modules/request/node_modules/oauth-sign/test.js:\n    4    ;\n    5  \n    6: // Tests from Twitter documentation https://dev.twitter.com/docs/auth/oauth\n    7  \n    8: var reqsign = hmacsign('POST', 'https://api.twitter.com/oauth/request_token', \n    9    { oauth_callback: 'http://localhost:3005/the_dance/process_callback?service_provider_id=11'\n   10    , oauth_consumer_key: 'GDdmIQH6jhtmLUypg82g'\n   ..\n   19  assert.equal(reqsign, '8wUi7m5HFQy76nowoCThusfgB+Q=')\n   20  \n   21: var accsign = hmacsign('POST', 'https://api.twitter.com/oauth/access_token',\n   22    { oauth_consumer_key: 'GDdmIQH6jhtmLUypg82g'\n   23    , oauth_nonce: '9zWH6qe0qG7Lc1telCn7FhUbLyVdjEaL3MO5uHxn8'\n\n/usr/local/projects/elite/node_modules/mongoose/node_modules/mongodb/lib/mongodb/db.js:\n   23  \n   24    // Authentication methods\n   25:   , mongodb_cr_authenticate = require('./auth/mongodb_cr.js').authenticate\n   26:   , mongodb_gssapi_authenticate = require('./auth/mongodb_gssapi.js').authenticate\n   27:   , mongodb_sspi_authenticate = require('./auth/mongodb_sspi.js').authenticate\n   28:   , mongodb_plain_authenticate = require('./auth/mongodb_plain.js').authenticate\n   29:   , mongodb_x509_authenticate = require('./auth/mongodb_x509.js').authenticate\n   30:   , mongodb_scram_authenticate = require('./auth/mongodb_scram.js').authenticate;\n   31  \n   32  var hasKerberos = false;\n\n/usr/local/projects/elite/node_modules/mongoose/node_modules/mongodb/lib/mongodb/connection/base.js:\n    2    , inherits = require('util').inherits\n    3    , utils = require('../utils')\n    4:   , mongodb_cr_authenticate = require('../auth/mongodb_cr.js').authenticate\n    5:   , mongodb_gssapi_authenticate = require('../auth/mongodb_gssapi.js').authenticate\n    6:   , mongodb_sspi_authenticate = require('../auth/mongodb_sspi.js').authenticate\n    7:   , mongodb_plain_authenticate = require('../auth/mongodb_plain.js').authenticate\n    8:   , mongodb_x509_authenticate = require('../auth/mongodb_x509.js').authenticate\n    9:   , mongodb_scram_authenticate = require('../auth/mongodb_scram.js').authenticate;\n   10  \n   11  var id = 0;\n\n/usr/local/projects/elite/node_modules/passport/lib/authenticator.js:\n  151   *     passport.authenticate('basic', { session: false })(req, res);\n  152   *\n  153:  *     app.get('/auth/twitter', passport.authenticate('twitter'), function(req, res) {\n  154   *       // request will be redirected to Twitter\n  155   *     });\n  156:  *     app.get('/auth/twitter/callback', passport.authenticate('twitter'), function(req, res) {\n  157   *       res.json(req.user);\n  158   *     });\n\n/usr/local/projects/elite/server/api/commodity/index.js:\n    3  var express = require('express');\n    4  var controller = require('./commodity.controller');\n    5: var auth = require('../../auth/auth.service');\n    6  \n    7  var router = express.Router();\n\n/usr/local/projects/elite/server/api/user/index.js:\n    4  var controller = require('./user.controller');\n    5  var config = require('../../config/environment');\n    6: var auth = require('../../auth/auth.service');\n    7  \n    8  var router = express.Router();\n\n71 matches across 29 files\n",
+			"settings":
+			{
+				"buffer_size": 30600,
+				"line_ending": "Unix",
+				"name": "Find Results",
+				"scratch": true
+			}
+		},
+		{
+			"file": "client/app/login/login.controller.js",
+			"settings":
+			{
+				"buffer_size": 695,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "server/api/user/user.model.js",
+			"settings":
+			{
+				"buffer_size": 2621,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/usr/local/projects/elite/client/app/app.css",
+		"/usr/local/projects/elite/client/app/signup/signup.controller.js",
+		"/usr/local/projects/elite/client/app/login/login.html",
+		"/usr/local/projects/elite/client/app/signup/signup.html",
+		"/usr/local/projects/elite/client/app/signup/signup.js",
+		"/usr/local/projects/elite/bower.json",
+		"/usr/local/projects/elite/client/app/app.js",
+		"/usr/local/projects/elite/client/components/auth/auth.service.js",
+		"/usr/local/projects/elite/client/components/auth/user.service.js",
+		"/usr/local/projects/elite/client/app/login/login.js",
+		"/usr/local/projects/elite/client/app/login/login.controller.js",
+		"/usr/local/projects/elite/server/api/user/index.js",
+		"/usr/local/projects/elite/server/api/commodity/index.js",
+		"/usr/local/projects/elite/server/api/user/user.model.js",
+		"/usr/local/projects/elite/client/app/commodities/commodities.controller.js",
+		"/usr/local/projects/elite/server/api/starsystem/starsystem.controller.js",
+		"/usr/local/projects/elite/client/app/starsystems/starsystems.controller.js",
+		"/usr/local/projects/elite/client/app/starports/starports.controller.js",
+		"/usr/local/projects/elite/server/api/starport/index.js",
+		"/usr/local/projects/elite/server/api/user/user.controller.js",
+		"/usr/local/projects/elite/server/auth/index.js",
+		"/usr/local/projects/elite/server/auth/auth.service.js",
+		"/usr/local/projects/elite/server/auth/local/passport.js",
+		"/usr/local/projects/elite/server/auth/local/index.js",
+		"/usr/local/projects/elite/server/api/starport/starport.controller.js",
+		"/usr/local/projects/elite/server/config/environment/development.js",
+		"/usr/local/projects/elite/client/app/starports/starports.html",
+		"/usr/local/projects/elite/server/api/starsystem/starsystem.model.js",
+		"/usr/local/projects/elite/client/app/main/main.controller.js",
+		"/usr/local/projects/elite/client/app/main/main.html",
+		"/usr/local/projects/elite/client/components/navbar/navbar.controller.js",
+		"/usr/local/projects/elite/client/app/main/main.css",
+		"/usr/local/projects/elite/client/app/starsystems/starsystem.modal.html",
+		"/usr/local/projects/elite/client/app/starsystems/starsystem.modal.controller.js",
+		"/usr/local/projects/elite/server/api/starsystem/index.js",
+		"/usr/local/projects/elite/client/app/starsystems/starsystems.html",
+		"/usr/local/projects/elite/client/app/commodities/commodities.html",
+		"/usr/local/projects/elite/client/index.html",
+		"/usr/local/projects/elite/server/api/starport/starport.model.js",
+		"/usr/local/projects/elite/server/api/commodity/commodity.controller.js",
+		"/usr/local/projects/elite/client/app/commodities/commodity.modal.html",
+		"/usr/local/projects/elite/client/app/commodities/commodity.modal.controller.js",
+		"/usr/local/projects/elite/client/app/starsystems/starsystems.js",
+		"/usr/local/projects/elite/server/routes.js",
+		"/usr/local/projects/elite/server/app.js",
+		"/usr/local/projects/elite/client/components/autocomplete/autocomplete.js",
+		"/usr/local/projects/elite/server/api/commodity/commodity.model.js",
+		"/usr/local/projects/elite/client/app/commodities/commodities.js",
+		"/usr/local/projects/elite/client/components/navbar/navbar.css",
+		"/usr/local/projects/elite/client/components/modal/modal.service.js",
+		"/usr/local/projects/elite/client/components/navbar/navbar.html",
+		"/Users/Suceava/Library/Application Support/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
+		"/usr/local/projects/elite/client/app/starports/starports.js",
+		"/usr/local/projects/elite/client/app/starport/starports.controller.js",
+		"/usr/local/projects/elite/client/app/starport/starports.html",
+		"/usr/local/projects/elite/server/api/thing/thing.controller.js",
+		"/usr/local/projects/test/server/app.js",
+		"/usr/local/projects/test/server/api/starport/starport.model.js",
+		"/usr/local/projects/test/server/api/user/user.model.js",
+		"/usr/local/projects/test/server/config/express.js",
+		"/usr/local/projects/test/server/routes.js",
+		"/usr/local/projects/test/server/config/seed.js",
+		"/usr/local/projects/yosample/app/views/main.html",
+		"/usr/local/projects/yosample/app/scripts/controllers/main.js",
+		"/usr/local/projects/yosample/app/scripts/app.js",
+		"/usr/local/projects/yosample/test/karma.conf.js",
+		"/usr/local/projects/yosample/test/spec/controllers/main.js",
+		"/usr/local/projects/test/server/config/environment/development.js",
+		"/usr/local/projects/test/server/api/user/user.model.spec.js",
+		"/usr/local/projects/test/server/components/errors/index.js",
+		"/Users/Suceava/.bash_profile",
+		"/usr/local/projects/views/layout.html",
+		"/usr/local/elite/dangerous/index.html",
+		"/usr/local/elite/dangerous/package.json",
+		"/usr/local/elite/dangerous/server.js",
+		"/usr/local/elite/dangerous/deplist.txt",
+		"/usr/local/projects/server.js",
+		"/usr/local/elite/dangerous/README.md",
+		"/Users/Suceava/.ssh/id_rsa.pub",
+		"/Users/Suceava/.gitconfig",
+		"/usr/local/projects/views/index.html",
+		"/usr/local/projects/views/paste.html",
+		"/usr/local/projects/static/js/paste.js",
+		"/usr/local/projects/static/js/webgl.js",
+		"/usr/local/projects/views/webgl.html",
+		"/usr/local/projects/package.json",
+		"/Users/Suceava/views/layout.html",
+		"/usr/local/projects/layout.html",
+		"/Users/Suceava/views/paste.html",
+		"/usr/local/projects/paste.html",
+		"/usr/local/projects/past.html",
+		"/usr/local/projects/mynode.js"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 93.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"auth/",
+			"login",
+			"signup",
+			".main",
+			"alert",
+			"seed",
+			"jquery",
+			"ng-controller",
+			"commodities.html",
+			"modal.service.js",
+			"openModal",
+			"Modal",
+			"modal.html",
+			"browsehappy",
+			"ui.grid",
+			"modal.css",
+			"errorHandler",
+			"[404]",
+			"pageNotFound",
+			"404",
+			"errors[",
+			"tab",
+			"main.controller",
+			"e2e",
+			"app/app.js",
+			"app.js",
+			"main.js",
+			"Thing"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 6,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "server/api/commodity/index.js",
+					"settings":
+					{
+						"buffer_size": 509,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								236,
+								260
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "server/routes.js",
+					"settings":
+					{
+						"buffer_size": 747,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								419,
+								419
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "client/components/navbar/navbar.controller.js",
+					"settings":
+					{
+						"buffer_size": 730,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								636,
+								636
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "client/components/navbar/navbar.html",
+					"settings":
+					{
+						"buffer_size": 1271,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1108,
+								1108
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"settings":
+					{
+						"buffer_size": 30600,
+						"regions":
+						{
+							"match":
+							{
+								"flags": 112,
+								"regions":
+								[
+									[
+										276,
+										281
+									],
+									[
+										349,
+										354
+									],
+									[
+										701,
+										706
+									],
+									[
+										913,
+										918
+									],
+									[
+										1151,
+										1156
+									],
+									[
+										1320,
+										1325
+									],
+									[
+										1598,
+										1603
+									],
+									[
+										4856,
+										4861
+									],
+									[
+										9430,
+										9435
+									],
+									[
+										18399,
+										18404
+									],
+									[
+										18568,
+										18573
+									],
+									[
+										18897,
+										18902
+									],
+									[
+										19166,
+										19171
+									],
+									[
+										19418,
+										19423
+									],
+									[
+										19504,
+										19509
+									],
+									[
+										19592,
+										19597
+									],
+									[
+										19679,
+										19684
+									],
+									[
+										19766,
+										19771
+									],
+									[
+										19853,
+										19858
+									],
+									[
+										20173,
+										20178
+									],
+									[
+										20260,
+										20265
+									],
+									[
+										20349,
+										20354
+									],
+									[
+										20437,
+										20442
+									],
+									[
+										20525,
+										20530
+									],
+									[
+										20613,
+										20618
+									],
+									[
+										20923,
+										20928
+									],
+									[
+										21141,
+										21146
+									],
+									[
+										21530,
+										21535
+									],
+									[
+										21642,
+										21647
+									],
+									[
+										22004,
+										22009
+									],
+									[
+										22061,
+										22066
+									],
+									[
+										22385,
+										22390
+									],
+									[
+										22468,
+										22473
+									],
+									[
+										22784,
+										22789
+									],
+									[
+										23136,
+										23141
+									],
+									[
+										23354,
+										23359
+									],
+									[
+										23738,
+										23743
+									],
+									[
+										23795,
+										23800
+									],
+									[
+										24084,
+										24089
+									],
+									[
+										24167,
+										24172
+									],
+									[
+										24483,
+										24488
+									],
+									[
+										24847,
+										24852
+									],
+									[
+										25065,
+										25070
+									],
+									[
+										25461,
+										25466
+									],
+									[
+										25518,
+										25523
+									],
+									[
+										25856,
+										25861
+									],
+									[
+										25939,
+										25944
+									],
+									[
+										26255,
+										26260
+									],
+									[
+										26619,
+										26624
+									],
+									[
+										26837,
+										26842
+									],
+									[
+										27233,
+										27238
+									],
+									[
+										27290,
+										27295
+									],
+									[
+										27591,
+										27596
+									],
+									[
+										27674,
+										27679
+									],
+									[
+										27990,
+										27995
+									],
+									[
+										28312,
+										28317
+									],
+									[
+										28398,
+										28403
+									],
+									[
+										28486,
+										28491
+									],
+									[
+										28573,
+										28578
+									],
+									[
+										28660,
+										28665
+									],
+									[
+										28747,
+										28752
+									],
+									[
+										29062,
+										29067
+									],
+									[
+										29149,
+										29154
+									],
+									[
+										29238,
+										29243
+									],
+									[
+										29326,
+										29331
+									],
+									[
+										29414,
+										29419
+									],
+									[
+										29502,
+										29507
+									],
+									[
+										29748,
+										29753
+									],
+									[
+										29917,
+										29922
+									],
+									[
+										30241,
+										30246
+									],
+									[
+										30505,
+										30510
+									]
+								],
+								"scope": ""
+							}
+						},
+						"selection":
+						[
+							[
+								716,
+								716
+							]
+						],
+						"settings":
+						{
+							"detect_indentation": false,
+							"output_tag": 1,
+							"result_base_dir": "",
+							"result_file_regex": "^([A-Za-z\\\\/<].*):$",
+							"result_line_regex": "^ +([0-9]+):",
+							"scroll_past_end": true,
+							"syntax": "Packages/Default/Find Results.hidden-tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "client/app/login/login.controller.js",
+					"settings":
+					{
+						"buffer_size": 695,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								597,
+								607
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "server/api/user/user.model.js",
+					"settings":
+					{
+						"buffer_size": 2621,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2014,
+								2014
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1090.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 31.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"replace":
+	{
+		"height": 0.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 247.0,
+	"status_bar_visible": true
+}

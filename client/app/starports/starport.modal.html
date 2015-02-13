@@ -1,0 +1,53 @@
+<div class="modal-header">
+  <h3 class="modal-title">ADD STARPORT</h3>
+</div>
+<div class="modal-body">
+  <form class="form-horizontal" name="starPortForm">
+    <div class="form-group">
+      <label for="name" class="control-label col-sm-2">Name</label>
+      <div class="col-sm-10">
+        <input id="name" name="name" type="text" class="form-control focus" ng-model="starport.name" value="{{starport.name}}" required>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="starSystem" class="control-label col-sm-2">System</label>
+      <div class="col-sm-10">
+        <input id="starSystem" name="starSystem" autocomplete ui-items="starSystemList" ng-model="starport.starSystem.name" class="form-control">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="distanceFromStar" class="control-label col-sm-2">Distance</label>
+      <div class="col-sm-10">
+        <input id="distanceFromStar" name="distanceFromStar" ng-model="starport.distanceFromStar" class="form-control">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="faction" class="control-label col-sm-2">Faction</label>
+      <div class="col-sm-10">
+        <input id="faction" name="faction" autocomplete ui-items="factionList" ng-model="starport.faction" class="form-control">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="government" class="control-label col-sm-2">Government</label>
+      <div class="col-sm-10">
+        <input id="government" name="government" autocomplete ui-items="governmentList" ng-model="starport.government" class="form-control">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="allegiance" class="control-label col-sm-2">Allegiance</label>
+      <div class="col-sm-10">
+        <select id="allegiance" name="allegiance" class="form-control" ng-model="starport.allegiance" ng-options="allegiance as allegiance for allegiance in allegianceList">
+        </select>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button class="btn eliteButton" ng-click="ok()">SAVE</button>
+  <button class="btn eliteButton" ng-click="cancel()">CANCEL</button>
+</div>

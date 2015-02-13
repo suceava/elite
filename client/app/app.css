@@ -1,0 +1,156 @@
+
+/**
+ * Bootstrap Fonts
+ */
+
+@font-face {
+    font-family: 'Glyphicons Halflings';
+    src: url('../bower_components/bootstrap/fonts/glyphicons-halflings-regular.eot');
+    src: url('../bower_components/bootstrap/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'),
+    url('../bower_components/bootstrap/fonts/glyphicons-halflings-regular.woff') format('woff'),
+    url('../bower_components/bootstrap/fonts/glyphicons-halflings-regular.ttf') format('truetype'),
+    url('../bower_components/bootstrap/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+}
+
+/**
+ *Font Awesome Fonts
+ */
+
+@font-face {
+    font-family: 'FontAwesome';
+    src: url('../bower_components/font-awesome/fonts/fontawesome-webfont.eot?v=4.1.0');
+    src: url('../bower_components/font-awesome/fonts/fontawesome-webfont.eot?#iefix&v=4.1.0') format('embedded-opentype'),
+    url('../bower_components/font-awesome/fonts/fontawesome-webfont.woff?v=4.1.0') format('woff'),
+    url('../bower_components/font-awesome/fonts/fontawesome-webfont.ttf?v=4.1.0') format('truetype'),
+    url('../bower_components/font-awesome/fonts/fontawesome-webfont.svg?v=4.1.0#fontawesomeregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'eurostile';
+    src: url('../assets/fonts/eurostile.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/**
+ * App-wide Styles
+ */
+
+body {
+  font-family: eurostile;
+  background-color: rgb(11,11,11);
+  color: #ff8c0d;
+}
+footer {
+  color: #FF8C0D;
+  text-align: center;
+  margin-top:40px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255,140,14,0.50);
+}
+
+.container {
+  width: 95%;
+}
+.container .row {
+  margin-top: 20px;
+}
+.login.container {
+  width: 300px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.gridStyle {
+  width: 100%;
+  min-height: 300px;
+  color: #ff8c0d;
+  background-color: #0b0b0b !important;
+}
+.linkedSystems.gridStyle {
+  height: 100px;
+  min-height: 0px;
+}
+
+/* header */
+.gridStyle .ngTopPanel {
+  border-top: 2px solid rgb(255,140,14);
+  border-bottom: 2px solid rgb(255,140,14);
+  box-sizing: content-box !important;
+  background-color: #0b0b0b !important;
+}
+.gridStyle .ngVerticalBarVisible {
+  width: 0px !important;
+}
+/* row */
+.gridStyle .ngRow {
+  font-size: 16px;
+  background-color: #24110d !important;
+}
+.gridStyle .ngRow.selected:hover,
+.gridStyle .ngRow.selected {
+  background-color: #ff7707 !important;
+  color: #2d1405;
+}
+.gridStyle .ngCell {
+  box-sizing: border-box !important;    
+  border-bottom: 2px solid rgb(0,0,0);
+}
+/* group header */
+.gridStyle .ngAggregate {
+  color: rgb(255,255,255);
+  border-bottom: 1px solid rgb(0,0,0);
+  background-color: #0b0b0b !important;
+}
+.gridStyle .ngAggregateText {
+  left: 7px !important;
+}
+
+/* button */
+.eliteButton {
+  color: #ff8c0d;
+  background-color: #24110d !important;
+  width: 120px;
+}
+.gridStyle .ngRow:hover,
+.eliteButton:hover {
+  color: #ff8c0d;
+  background-color: #35160c !important;
+}
+.eliteButton:focus {
+  color: #ff8c0d;
+}
+
+/* page header nav */
+.gridPageHeader.navbar h2 {
+  display: inline-block;
+}
+.gridPageHeader.navbar button {
+  float: right;
+  margin-top: 25px;
+  margin-left: 5px;
+}
+
+/* modal */
+.modal-dialog .modal-content {
+  border: 2px solid rgba(255,140,14,0.8);
+  color: #ff8c0d;
+  background-color: rgba(11,11,11,0.8) !important;
+}
+.modal-dialog .modal-header {
+  border-bottom: 1px solid rgb(255,140,14); 
+}
+.modal-dialog .modal-footer {
+  border-top: 1px solid rgb(255,140,14); 
+}
+
+/* autocomplete */
+.ui-autocomplete {
+  z-index: 2000; /* so it works for modals */
+}
+.ui-autocomplete li {
+  font-family: eurostile !important;
+  font-size: 14px !important;
+}
