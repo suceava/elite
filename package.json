@@ -16,7 +16,12 @@
     "ejs": "~0.8.4",
     "mongoose": "~3.8.8",
     "composable-middleware": "^0.3.0",
-    "connect-mongo": "^0.4.1"
+    "connect-mongo": "^0.4.1",
+    "crypto":"~0.0.3",
+    "passport":"~0.2.1",
+    "passport-local":"~1.0.0",
+    "express-jwt":"~1.0.0",
+    "jsonwebtoken":"~3.2.2"
   },
   "devDependencies": {
     "grunt": "~0.4.4",
