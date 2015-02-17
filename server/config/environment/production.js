@@ -15,15 +15,6 @@ module.exports = {
 
   // MongoDB connection options
   mongo: {
-/*    uri: process.env.OPENSHIFT_MONGODB_DB_PASSWORD ?
-          process.env.OPENSHIFT_MONGODB_DB_USERNAME + ":" +
-          process.env.OPENSHIFT_MONGODB_DB_PASSWORD + "@" +
-          process.env.OPENSHIFT_MONGODB_DB_HOST + ':' +
-          process.env.OPENSHIFT_MONGODB_DB_PORT + '/' +
-          process.env.OPENSHIFT_APP_NAME */
-      uri: process.env.MONGODB_HOST ?
-          process.env.MONGODB_HOST + ':'
-          process.env.MONGODB_PORT + '/elite'
-          : 'mongodb://localhost/elite'
+    uri: 'mongodb://' + (process.env.DB_1_PORT_27017_TCP_ADDR || 'localhost') + '/elite'
   }
 };
