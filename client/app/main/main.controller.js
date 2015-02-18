@@ -33,11 +33,11 @@ angular.module('eliteApp')
       enableSorting: false,
       multiSelect: false,
       columnDefs: [
-        { field: 'name', displayName: 'NAME' },
-        { field: 'faction', displayName: 'FACTION' },
-        { field: 'government', displayName: 'GOVERNMENT' },
-        { field: 'allegiance', displayName: 'ALLEGIANCE' },
-        { field: 'created', displayName: 'CREATED' }
+        { field: 'starports.name', displayName: 'NAME' },
+        { field: 'starports.faction', displayName: 'FACTION' },
+        { field: 'starports.government', displayName: 'GOVERNMENT' },
+        { field: 'starports.allegiance', displayName: 'ALLEGIANCE' },
+        { field: 'starports.created', displayName: 'CREATED' }
       ]
     };
 

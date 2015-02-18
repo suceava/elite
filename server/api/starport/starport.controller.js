@@ -156,16 +156,21 @@ exports.destroy = function(req, res) {
   });
 };
 
-
 exports.recent = function(req, res) {
-  StarPort
-    .find()
-    //.limit(10)
-   // .sort('-created')
-    .exec(function (err, starports) {
+  StarSystem.aggregate([
+      { $unwind: "$starports" },
+      { $project: { starports: 1 } },
+      { $sort: { "-starports.created": 1 } },
+      { $limit: 10 }
+    ],
+    function (err, starports) {
+      if (err) {
+        return res.send(500, err);  
+      }
       return res.json(starports);
     });
 };
+
 
 var findStarSystem = function(starSystemName, callback) {
   // find the star system by name
