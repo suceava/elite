@@ -44,6 +44,7 @@
     <div class="form-group">
       <label class="control-label col-sm-4">Linked Star Systems</label>
       <button class="btn eliteButton" ng-click="showAddLink()">ADD LINK</button>      
+      <button class="btn eliteButton" ng-click="confirmDeleteLink()" ng-model="selectedLinkedStarSystem" ng-disabled="selectedLinkedStarSystem == null">DELETE</button>
     </div>
     <div class="form-group">
       <div class="linkedSystems gridStyle" ng-grid="linkedStarSystemsGridOptions"></div>

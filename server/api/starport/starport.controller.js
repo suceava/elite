@@ -55,29 +55,33 @@ exports.create = function (req, res) {
   var starport = new StarPort(req.body);
   starport.createdBy = req.user;
 
-  findStarSystem(req.body.starSystem.name, function (err, starsystem) {
-    if (err) {
-      return res.json(400, err);
-    }
-    if (!starsystem) {
-      return res.json(400, 'Invalid star system');
-    }    
+  // find the star system this port belongs in
+  StarSystem
+    .findByName(req.body.starSystem.name)
+    .then(function(starsystem) {
+      // found the system
+      if (!starsystem) {
+        return res.json(400, 'Invalid star system');
+      }    
 
-    // add the starport to the star system's list
-    if (!starsystem.starports) {
-      starsystem.starports = [];
-    }
-    starsystem.starports.push(starport);
-
-    // save the star system
-    starsystem.save(function(err) {
-      if (err) {
-        return res.json(400, err);
+      // add the starport to the star system's list
+      if (!starsystem.starports) {
+        starsystem.starports = [];
       }
+      starsystem.starports.push(starport);
 
-    	return res.json(201, starport);
+      // save the star system
+      starsystem.save(function(err) {
+        if (err) {
+          return res.json(400, err);
+        }
+
+        return res.json(201, starport);
+      });
+    }, function(err) {
+      // error
+      return res.json(400, err);
     });
-  });
 };
 
 exports.update = function(req, res) {
@@ -171,17 +175,6 @@ exports.recent = function(req, res) {
     });
 };
 
-
-var findStarSystem = function(starSystemName, callback) {
-  // find the star system by name
-  StarSystem.findOne({ 'name': starSystemName }, function (err, starsystem) {
-    if (err) {
-      callback(err, null);
-      return;
-    }
-    callback(null, starsystem);
-  });
-};
 
 var findStarSystemWithStarport = function(starportId, callback) {
   // find the starsystem that has this starport

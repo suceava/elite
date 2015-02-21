@@ -70,6 +70,7 @@ angular.module('eliteApp')
       });
 
       modal.result.then(function (starsystem) {
+        console.log('add/edit save');
         console.log(starsystem);
         if (starsystem._id) {
           // edit
@@ -80,7 +81,10 @@ angular.module('eliteApp')
             })
             .error(function (data, status, headers, config) {
               console.log(data);
-              alert(data.message);
+              if (data && data.message)
+                alert(data.message);
+              else
+                alert('Error updating star system');
             });
         }
         else {
@@ -92,7 +96,10 @@ angular.module('eliteApp')
             })
             .error(function (data, status, headers, config) {
               console.log(data);
-              alert(data.message);
+              if (data && data.message)
+                alert(data.message);
+              else
+                alert('Error adding star system');
             });
         }
       });
@@ -115,6 +122,9 @@ angular.module('eliteApp')
       ],
       
       afterSelectionChange: function(rowItem, event) {
+        if (!rowItem.selected) {
+          return;
+        }
         $scope.selectedStarSystem = rowItem.entity;
         return true;
       }
@@ -147,7 +157,6 @@ angular.module('eliteApp')
 
       if (confirm('Are you sure you want to delete "' + starsystem.name + '"?')) {
         // delete
-        console.log('deleting ' + starsystem._id);
         $http.delete('api/starsystems/' + starsystem._id)
           .success(function() {
             // refresh

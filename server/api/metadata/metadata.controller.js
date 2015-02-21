@@ -7,6 +7,7 @@ var errors = require('../../components/errors');
 
 var getAllegianceList = function() {
   return [ 
+    'None',
     'Alliance', 
     'Empire', 
     'Federation', 
@@ -28,15 +29,21 @@ var getFacilityList = function() {
 
 var getEconomyList = function() {
   return [
-    'Agriculture',
+    'None',
+    'Agricultural',
     'Extraction',
+    'High Tech',
+    'Industrial',
+    'Military',
     'Refinery',
-    'Service'
+    'Service',
+    'Terraforming'
   ];
 };
 
 var getSecurityList = function() {
   return [
+    'None',
     'High',
     'Medium',
     'Low'

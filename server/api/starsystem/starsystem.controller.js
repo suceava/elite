@@ -1,6 +1,7 @@
 'use strict'
 
 var _ = require('lodash');
+var mongoose = require('mongoose');
 var StarSystem = require('./starsystem.model');
 var errors = require('../../components/errors');
 
@@ -35,61 +36,79 @@ exports.show = function (req, res) {
     })
 };
 
+/* ADD */
 exports.create = function (req, res) {
   var starsystem = new StarSystem(req.body);
   starsystem.createdBy = req.user;
 
-  updateLinkedSystems(req.body.linkedStarSystems, starsystem.name, function(err, linkedStarSystems) {
+  // first save the system
+  StarSystem.create(starsystem, function (err, starsystem) {
     if (err) {
       return res.json(400, err);
     }
-    starsystem.linkedStarSystems = linkedStarSystems;
 
-    StarSystem.create(starsystem, function (err, starsystem) {
+    console.log('system created');
+    console.log(starsystem);
+
+    // now update the linked star systems
+    updateLinkedSystems(starsystem, req.body.linkedStarSystems, function(err, linkedStarSystems) {
       if (err) {
         return res.json(400, err);
       }
-      return res.json(201, starsystem);
-    });
-  });
-}
 
-exports.update = function(req, res) {
-  if (req.body._id) {
-    // remove _id from request body
-    delete req.body._id;
-  }
-  StarSystem.findById(req.params.id, function (err, starsystem) {
-    if (err) {
-      return res.send(500, err);  
-    }
-    if (!starsystem) {
-      return res.send(404);
-    }
-
-    updateLinkedSystems(req.body.linkedStarSystems, starsystem.name, function(err, linkedStarSystems) {
-      if (err) {
-        return res.json(400, err);
-      }
-      starsystem.linkedStarSystems = linkedStarSystems;
-
-      if (req.body.linkedStarSystems) {
-        // remove linked systems from request body before merge
-        delete req.body.linkedStarSystems;
-      }
-
-      var updated = _.merge(starsystem, req.body);
-      updated.save(function (err) {
+      starsystem.save(function (err) {
         if (err) { 
           return res.send(500, err);  
         }
 
-        return res.json(200, starsystem);
+        return res.json(201, starsystem);
       });
     });
   });
 }
 
+/* UPDATE */
+exports.update = function(req, res) {
+  if (req.body._id) {
+    // remove _id from request body
+    delete req.body._id;
+  }
+  console.log('update system ' + req.params.id);
+
+  StarSystem
+    .findById(req.params.id)
+    .populate('linkedStarSystems.starSystem', 'name')
+    .exec()
+    .then(function (starsystem) {
+      if (!starsystem) {
+        return res.send(404);
+      }
+
+      updateLinkedSystems(starsystem, req.body.linkedStarSystems, function(err, linkedStarSystems) {
+        if (err) {
+          return res.json(400, err);
+        }
+
+        if (req.body.linkedStarSystems) {
+          // remove linked systems from request body before merge
+          delete req.body.linkedStarSystems;
+        }
+
+        var updated = _.merge(starsystem, req.body);
+        updated.save(function (err) {
+          if (err) { 
+            return res.send(500, err);  
+          }
+
+          return res.json(200, starsystem);
+        });
+      });
+    }, function(err) {
+      return res.send(500, err);  
+    });
+}
+
+/* DELETE */
 exports.destroy = function(req, res) {
   StarSystem.findById(req.params.id, function (err, starsystem) {
     if (err) {
@@ -107,7 +126,7 @@ exports.destroy = function(req, res) {
   });
 };
 
-
+/* RECENTLY ADDED SYSTEMS */
 exports.recent = function(req, res) {
   StarSystem
     .find()
@@ -119,47 +138,170 @@ exports.recent = function(req, res) {
 };
 
 
-var updateLinkedSystems = function(linkedStarSystems, thisStarSystemName, callback) {
-  if (!linkedStarSystems) {
-    callback(null, null);
-    return;
-  }
 
-  var linked = 0;
-  var newLinkedSystems = [];
 
-  for (var i=0,l=linkedStarSystems.length; i<l; i++) {
-    var linkedSystem = linkedStarSystems[i];
 
-    findStarSystem(linkedSystem.starSystem.name, function (err, starsystem) {
-      if (err) {
-        callback(err);
-        return;
-      }
-
-      if (starsystem && starsystem.name != thisStarSystemName && linkedSystem.distance) {
-        newLinkedSystems.push({
-          starSystem: starsystem,
-          distance: linkedSystem.distance
-        });
-      }
-
-      if (++linked == l) {
-        // return null array if no items in it
-        callback(null, (newLinkedSystems.length > 0) ? newLinkedSystems : null);
-      }
-    });
-  }
-};
-
-var findStarSystem = function(starSystemName, callback) {
-  // find the star system by name
-  StarSystem.findOne({ 'name': starSystemName }, function (err, starsystem) {
-    if (err) {
-      callback(err, null);
+  var updateLinkedSystems = function(thisSystem, linkedStarSystems, callback) {
+    // update the star system's list of linked systems from the list sent from the client
+    if (!linkedStarSystems) {
+      callback(null, null);
       return;
     }
+    console.log('updateLinkedSystems');
+    console.log(linkedStarSystems);
 
-    callback(null, starsystem);
-  });
-};
+    // update the 2-way links for the other systems first
+    updateLinksOnLinkedSystems(thisSystem, linkedStarSystems)
+      .then(function() {
+        // update the links for this system
+        return thisSystem.updateLinkedSystems(linkedStarSystems);
+      })
+      .then(function() {
+        // all done
+        console.log('updated');
+        callback(null, thisSystem.linkedStarSystems);
+      })
+      .then(null, function(err) {
+        callback(err);
+      })
+      .end();
+
+    return;
+  };
+
+  var updateLinksOnLinkedSystems = function(thisSystem, linkedStarSystems) {
+    var promise = new mongoose.Promise(),
+        deletedLinks, addedLinks, changedLinks;
+
+    if (thisSystem.linkedStarSystems) {
+      // deleted links
+      deletedLinks = thisSystem.linkedStarSystems.filter(function(elem) {
+        // filter only links from current system not found in new links list
+        for (var j=0, lj=linkedStarSystems.length; j<lj; j++) {
+          if (elem.starSystem.name == linkedStarSystems[j].starSystem.name) {
+            return false;
+          }
+        }
+        return true;
+      });
+      console.log('delted links');
+      console.log(deletedLinks);
+
+      // added links
+      addedLinks = linkedStarSystems.filter(function(elem) {
+        // filter only elems from new list not found in current system
+        for (var j=0, lj=thisSystem.linkedStarSystems.length; j<lj; j++) {
+          if (elem.starSystem.name == thisSystem.linkedStarSystems[j].starSystem.name) {
+            return false;
+          }
+        }
+        return true;
+      });
+      console.log('added links');
+      console.log(addedLinks);
+
+      // changed links
+  /*    changedLinks = thisSystem.linkedStarSystems.filter(function(elem) {
+        // filter only elems that have different distance
+        var i = _.findIndex(linkedStarSystems, function(link) {
+          return elem.starSystem.name == link.starSystem.name && elem.distance != link.distance;
+        });
+      }); */
+    }
+    else {
+      // current system has no links => all new are added
+      addedLinks = linkedStarSystems;
+    }
+
+    updateDeletedLinks(deletedLinks, thisSystem)
+      .then(function() {
+        // deleted links updated
+        console.log('after delete then add');
+        return updateAddedLinks(addedLinks, thisSystem);
+      })
+      .then(function() {
+        // added links updated
+        console.log('after add then done');
+        promise.resolve(null, null);
+      })
+      .then(null, function(err) {
+        promise.reject(err);
+      });
+
+    return promise;
+  };
+
+  var updateDeletedLinks = function(deletedLinks, thisSystem) {
+    var promise = new mongoose.Promise();
+
+    if (deletedLinks && deletedLinks.length) {
+      var linked = 0,
+          linkedLength = deletedLinks.length;
+
+      // remove links to this system from deleted linked systems
+      _.forEach(deletedLinks, function(link) {
+        StarSystem
+          .findById(link.starSystem._id)
+          .populate('linkedStarSystems.starSystem', 'name')
+          .exec()
+          .then(function (system) {
+            console.log('deleting');
+            console.log(system);
+            system.removeLinkedStarSystem(thisSystem._id);
+
+            if (++linked == linkedLength) {
+              promise.resolve(null, null);
+            }
+          }, function(err) {
+            promise.reject(err);
+          });
+      });
+    }
+    else {
+      // nothing to delete
+      promise.resolve(null, null);
+    }
+
+    return promise;
+  };
+
+  var updateAddedLinks = function(addedLinks, thisSystem) {
+    var promise = new mongoose.Promise();
+
+    if (addedLinks && addedLinks.length) {
+      var linked = 0,
+          linkedLength = addedLinks.length;
+
+      // add links to this system to the newly linked system
+      _.forEach(addedLinks, function(link) {
+        StarSystem
+          .findByName(link.starSystem.name)
+          .then(function (system) {
+            console.log('adding');
+            console.log(system);
+
+            // cache the id
+            link.starSystem._id = system._id;
+
+            system.addLinkedStarSystem({ 
+              starSystem: thisSystem._id,
+              distance: link.distance
+            });
+
+            if (++linked == linkedLength) {
+              promise.resolve(null, null);
+            }
+          }, function(err) {
+            promise.reject(err);
+          });
+      });
+    }
+    else {
+      // nothing to add
+      promise.resolve(null, null);
+    }
+
+
+    return promise;
+  };
+

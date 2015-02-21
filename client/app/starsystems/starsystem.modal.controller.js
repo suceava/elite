@@ -8,6 +8,7 @@ angular.module('eliteApp')
     $scope.governmentList = governmentList;
     $scope.securityList = securityList;
     $scope.factionList = factionList;
+    $scope.selectedLinkedStarSystem = null;
 
     $scope.linkedStarSystemsGridOptions = { 
       data: 'starsystem.linkedStarSystems',
@@ -53,11 +54,42 @@ angular.module('eliteApp')
       });
 
       modal.result.then(function (linkedStarSystem) {
+        // make sure added system isn't this system
+        if (linkedStarSystem.starSystem.name == $scope.starsystem.name) {
+            window.alert('Star system cannot be linked to itself');
+            return;
+        }
+
         if (!$scope.starsystem.linkedStarSystems) {
+          // initialize the links array
           $scope.starsystem.linkedStarSystems = [];
+        }
+        else {
+          // make sure added star system isn't already linked
+          var i = _.findIndex($scope.starsystem.linkedStarSystems, function(elem) {
+              return elem.name == linkedStarSystem.starSystem.name;
+            });
+          if (i >= 0) {
+            window.alert('Star system already linked');
+            return;
+          }
         }
         $scope.starsystem.linkedStarSystems.push(linkedStarSystem);
       });
+    };
 
+    $scope.confirmDeleteLink = function() {
+      var linkedSystem = $scope.selectedLinkedStarSystem;
+
+      if (!linkedSystem) {
+        return;
+      }
+
+      if (confirm('Are you sure you want to delete link to "' + linkedSystem.starSystem.name + '"?')) {
+        // delete link to the named system
+        $scope.starsystem.linkedStarSystems = _.remove($scope.starsystem.linkedStarSystems, function(elem) {
+          return elem.name == linkedSystem.starSystem.name;
+        });
+      }
     };
   });
