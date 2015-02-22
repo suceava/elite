@@ -38,7 +38,17 @@ exports.show = function (req, res) {
 
 /* ADD */
 exports.create = function (req, res) {
-  var starsystem = new StarSystem(req.body);
+  var starsystem,
+      postedLinkedStarSystems = req.body.linkedStarSystems;
+
+  if (req.body.linkedStarSystems) {
+    // remove linked systems from request body before creating it
+    delete req.body.linkedStarSystems;
+  }
+
+  // instantiate star system from posted data (without the linked star systems)
+  starsystem = new StarSystem(req.body);
+  // set the current user
   starsystem.createdBy = req.user;
 
   // first save the system
@@ -47,11 +57,8 @@ exports.create = function (req, res) {
       return res.json(400, err);
     }
 
-    console.log('system created');
-    console.log(starsystem);
-
     // now update the linked star systems
-    updateLinkedSystems(starsystem, req.body.linkedStarSystems, function(err, linkedStarSystems) {
+    updateLinkedSystems(starsystem, postedLinkedStarSystems, function(err, linkedStarSystems) {
       if (err) {
         return res.json(400, err);
       }
@@ -177,8 +184,10 @@ exports.recent = function(req, res) {
       // deleted links
       deletedLinks = thisSystem.linkedStarSystems.filter(function(elem) {
         // filter only links from current system not found in new links list
+        // (must match name & distance)
         for (var j=0, lj=linkedStarSystems.length; j<lj; j++) {
-          if (elem.starSystem.name == linkedStarSystems[j].starSystem.name) {
+          if ((elem.starSystem.name == linkedStarSystems[j].starSystem.name) &&
+              (elem.distance.toString() == linkedStarSystems[j].distance)) {
             return false;
           }
         }
@@ -190,8 +199,10 @@ exports.recent = function(req, res) {
       // added links
       addedLinks = linkedStarSystems.filter(function(elem) {
         // filter only elems from new list not found in current system
+        // (must match name & distance)
         for (var j=0, lj=thisSystem.linkedStarSystems.length; j<lj; j++) {
-          if (elem.starSystem.name == thisSystem.linkedStarSystems[j].starSystem.name) {
+          if (elem.starSystem.name == thisSystem.linkedStarSystems[j].starSystem.name &&
+              elem.distance.toString() == thisSystem.linkedStarSystems[j].distance) {
             return false;
           }
         }
@@ -199,14 +210,6 @@ exports.recent = function(req, res) {
       });
       console.log('added links');
       console.log(addedLinks);
-
-      // changed links
-  /*    changedLinks = thisSystem.linkedStarSystems.filter(function(elem) {
-        // filter only elems that have different distance
-        var i = _.findIndex(linkedStarSystems, function(link) {
-          return elem.starSystem.name == link.starSystem.name && elem.distance != link.distance;
-        });
-      }); */
     }
     else {
       // current system has no links => all new are added
@@ -216,12 +219,10 @@ exports.recent = function(req, res) {
     updateDeletedLinks(deletedLinks, thisSystem)
       .then(function() {
         // deleted links updated
-        console.log('after delete then add');
         return updateAddedLinks(addedLinks, thisSystem);
       })
       .then(function() {
         // added links updated
-        console.log('after add then done');
         promise.resolve(null, null);
       })
       .then(null, function(err) {
@@ -245,14 +246,14 @@ exports.recent = function(req, res) {
           .populate('linkedStarSystems.starSystem', 'name')
           .exec()
           .then(function (system) {
-            console.log('deleting');
-            console.log(system);
-            system.removeLinkedStarSystem(thisSystem._id);
-
+            return system.removeLinkedStarSystem(thisSystem._id);
+          })
+          .then(function(system) {
             if (++linked == linkedLength) {
               promise.resolve(null, null);
             }
-          }, function(err) {
+          })
+          .then(null, function(err) {
             promise.reject(err);
           });
       });
@@ -277,21 +278,22 @@ exports.recent = function(req, res) {
         StarSystem
           .findByName(link.starSystem.name)
           .then(function (system) {
-            console.log('adding');
-            console.log(system);
+            if (system) {
+              // cache the id
+              link.starSystem._id = system._id;
 
-            // cache the id
-            link.starSystem._id = system._id;
-
-            system.addLinkedStarSystem({ 
-              starSystem: thisSystem._id,
-              distance: link.distance
-            });
-
+              return system.addLinkedStarSystem({ 
+                starSystem: thisSystem._id,
+                distance: link.distance
+              });
+            }
+          })
+          .then(function (system) {
             if (++linked == linkedLength) {
               promise.resolve(null, null);
             }
-          }, function(err) {
+          })
+          .then(null, function(err) {
             promise.reject(err);
           });
       });

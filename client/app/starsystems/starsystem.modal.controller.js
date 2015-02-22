@@ -87,8 +87,8 @@ angular.module('eliteApp')
 
       if (confirm('Are you sure you want to delete link to "' + linkedSystem.starSystem.name + '"?')) {
         // delete link to the named system
-        $scope.starsystem.linkedStarSystems = _.remove($scope.starsystem.linkedStarSystems, function(elem) {
-          return elem.name == linkedSystem.starSystem.name;
+        _.remove($scope.starsystem.linkedStarSystems, function(elem) {
+          return elem.starSystem.name == linkedSystem.starSystem.name;
         });
       }
     };

@@ -23,26 +23,57 @@ var StarSystemSchema = new Schema({
 });
 
 StarSystemSchema.methods = {
+  /**
+   * Add a link to the given star system and save to DB
+   *
+   * @param {LinkedStarSystem} linkedStarSystem
+   * @return {Promise}
+   */
   addLinkedStarSystem: function(linkedStarSystem) {
+    var promise = new mongoose.Promise();
+
     if (!this.linkedStarSystems) {
       this.linkedStarSystems = [];
     }
     this.linkedStarSystems.push(linkedStarSystem);
     this.save(function(err) {
       if (err) {
-        throw (err);
+        promise.reject(err);
+      }
+      else {
+        promise.resolve(null, this);
       }
     });
+
+    return promise;
   },
+
+  /**
+   * Remove a link to the given star system and save to DB
+   *
+   * @param {ObjectID} starSystemId
+   * @return {Promise}
+   */
   removeLinkedStarSystem: function(starSystemId) {
-    this.linkedStarSystems = _.remove(this.linkedStarSystems, function(elem) {
-      return elem.starSystem == starSystemId || elem.starSystem._id == starSystemId;
+    var promise = new mongoose.Promise();
+
+    // remove the give star system from our list of linked systems
+    _.remove(this.linkedStarSystems, function(elem) {
+      var id = (elem.starSystem._id) ? elem.starSystem._id : elem.starSystem;
+      return starSystemId.equals(id);
     });
-    this.save(function(err) {
+    // update the star system
+    this.markModified('linkedStarSystems');
+    this.save(function(err, starsystem) {
       if (err) {
-        throw (err);
+        promise.reject(err);
+      }
+      else {
+        promise.resolve(null, this);
       }
     });
+
+    return promise;
   },
 
   /**

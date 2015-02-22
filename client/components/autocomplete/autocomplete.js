@@ -6,9 +6,7 @@ angular.module('eliteApp')
       iElement.autocomplete({
         source: scope[iAttrs.uiItems],
         select: function() {
-          $timeout(function() {
-            iElement.trigger('input');
-          }, 0);
+          iElement.trigger('input');
         }
       });
     };
