@@ -1,8 +1,9 @@
 'use strict'
 
 angular.module('eliteApp')
-  .controller('commodityModalController', function($scope, $modalInstance, commodity, types) {
+  .controller('commodityModalController', function($scope, $modalInstance, commodity, metadata, types) {
     $scope.commodity = commodity;
+    $scope.metadata = metadata;
     $scope.types = types;
 
     $scope.ok = function() {

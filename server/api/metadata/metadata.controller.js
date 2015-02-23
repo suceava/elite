@@ -128,6 +128,10 @@ exports.metadata = function(req, res) {
   if (!include) {
     return res.send(400, 'Must specify include');
   }
+  if (!_.isArray(include)) {
+    // make it an array
+    include = [include];
+  }
 
   var obj = {};
 

@@ -3,10 +3,20 @@
 angular.module('eliteApp')
   .controller('commoditiesController', function ($scope, $http, $modal) {
 
-    var loadCommodities = function() {
+    var loadData = function() {
+      $scope.selectedCommodity = null;
+
       $http.get('api/commodities')
         .success(function (commodities) {
           $scope.commodities = commodities;
+        });
+    };
+
+    var loadMetadata = function() {
+      // load combined metadata
+      $http.get('api/metadata?include=economy')
+        .success(function (metadata) {
+          $scope.metadata = metadata;
         });
     };
 
@@ -20,6 +30,9 @@ angular.module('eliteApp')
             resolve: {
               commodity: function() {
                 return commodity;
+              },
+              metadata: function() {
+                return $scope.metadata;
               },
               types: function() {
                 return types;
@@ -37,7 +50,7 @@ angular.module('eliteApp')
               $http.post('api/commodities', commodity)
                 .success(function () {
                   // refresh
-                  loadCommodities();
+                  loadData();
                 })
                 .error(function (data, status, headers, config) {
                   console.log(data);
@@ -51,7 +64,6 @@ angular.module('eliteApp')
 
 
     $scope.commodities = [];
-    $scope.selectedCommodity = null;
 
     $scope.gridOptions = { 
       data: 'commodities',
@@ -62,8 +74,8 @@ angular.module('eliteApp')
       columnDefs: [
         { field: 'type', displayName: 'TYPE', visible: false },
         { field: 'name', displayName: 'NAME' },
-        { field: 'producedBy', displayName: 'PRODUCED BY' },
-        { field: 'consumedBy', displayName: 'CONSUMED BY' }
+        { field: 'producedBy.join(",")', displayName: 'PRODUCED BY' },
+        { field: 'consumedBy.join(",")', displayName: 'CONSUMED BY' }
       ],
       plugins: [new ngGridFlexibleHeightPlugin()],
       aggregateTemplate: '<div ng-style="rowStyle(row)" class="ngAggregate ng-scope"><span class="ngAggregateText">{{toUpperCase(row.label)}}</span></div>',
@@ -100,7 +112,7 @@ angular.module('eliteApp')
         $http.delete('api/commodities/' + commodity._id)
           .success(function() {
             // refresh
-            loadCommodities();
+            loadData();
           });
       }
     };
@@ -110,5 +122,6 @@ angular.module('eliteApp')
     };
 
 
-    loadCommodities();
+    loadData();
+    loadMetadata();
   });
