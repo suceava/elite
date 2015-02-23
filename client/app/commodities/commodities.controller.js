@@ -65,6 +65,7 @@ angular.module('eliteApp')
         { field: 'producedBy', displayName: 'PRODUCED BY' },
         { field: 'consumedBy', displayName: 'CONSUMED BY' }
       ],
+      plugins: [new ngGridFlexibleHeightPlugin()],
       aggregateTemplate: '<div ng-style="rowStyle(row)" class="ngAggregate ng-scope"><span class="ngAggregateText">{{toUpperCase(row.label)}}</span></div>',
       
       afterSelectionChange: function(rowItem, event) {

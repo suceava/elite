@@ -10,10 +10,10 @@ var StarportSchema = new Schema({
   government: String,
   allegiance: String,
   facillities: [String],
-  economies: [{ type: Schema.Types.ObjectId, ref: 'Commodity' }],
+  economies: [String],
   imports: [{ type: Schema.Types.ObjectId, ref: 'Commodity' }],
   exports: [{ type: Schema.Types.ObjectId, ref: 'Commodity' }],
-  prohibited: [String],
+  prohibited: [{ type: Schema.Types.ObjectId, ref: 'Commodity' }],
   created: { type: Date, default: Date.now },
   createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true }
 });

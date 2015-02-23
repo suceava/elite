@@ -6,7 +6,8 @@ angular.module('eliteApp', [
   'ngSanitize',
   'ui.router',
   'ui.bootstrap',
-  'ngGrid'
+  'ngGrid',
+  'checklist-model'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $urlRouterProvider

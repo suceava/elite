@@ -34,17 +34,88 @@
     <div class="form-group">
       <label for="government" class="control-label col-sm-2">Government</label>
       <div class="col-sm-10">
-        <input id="government" name="government" autocomplete ui-items="governmentList" ng-model="starport.government" class="form-control">
+        <select id="government" name="government" class="form-control" ng-model="starport.government" ng-options="government as government for government in metadata.governmentList">
+        </select>
       </div>
     </div>
 
     <div class="form-group">
       <label for="allegiance" class="control-label col-sm-2">Allegiance</label>
       <div class="col-sm-10">
-        <select id="allegiance" name="allegiance" class="form-control" ng-model="starport.allegiance" ng-options="allegiance as allegiance for allegiance in allegianceList">
+        <select id="allegiance" name="allegiance" class="form-control" ng-model="starport.allegiance" ng-options="allegiance as allegiance for allegiance in metadata.allegianceList">
         </select>
       </div>
     </div>
+
+    <div class="form-group">
+      <label for="facility" class="control-label col-sm-2">Facilities</label>
+      <div class="col-sm-10">
+        <div class="eliteChecklist">
+          <div ng-repeat="facility in metadata.facilityList">
+            <label>
+              <input type="checkbox" checklist-model="starport.facilities" checklist-value="facility"> {{facility}}
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="economy" class="control-label col-sm-2">Economies</label>
+      <div class="col-sm-10">
+        <div class="eliteChecklist">
+          <div ng-repeat="economy in metadata.economyList">
+            <label>
+              <input type="checkbox" checklist-model="starport.economies" checklist-value="economy"> 
+              {{economy}}
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="imports" class="control-label col-sm-2">Imports</label>
+      <div class="col-sm-10">
+        <div class="eliteChecklist">
+          <div ng-repeat="commodity in commodityList">
+            <label>
+              <input type="checkbox" checklist-model="starport.imports" checklist-value="commodity._id"> 
+              {{commodity.name}}
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="exports" class="control-label col-sm-2">Exports</label>
+      <div class="col-sm-10">
+        <div class="eliteChecklist">
+          <div ng-repeat="commodity in commodityList">
+            <label>
+              <input type="checkbox" checklist-model="starport.exports" checklist-value="commodity._id"> 
+              {{commodity.name}}
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="prohibited" class="control-label col-sm-2">Prohibited</label>
+      <div class="col-sm-10">
+        <div class="eliteChecklist">
+          <div ng-repeat="commodity in commodityList">
+            <label>
+              <input type="checkbox" checklist-model="starport.prohibited" checklist-value="commodity._id"> 
+              {{commodity.name}}
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </form>
 </div>
 <div class="modal-footer">

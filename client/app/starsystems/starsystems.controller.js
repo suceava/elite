@@ -12,34 +12,22 @@ angular.module('eliteApp')
         });
     };
     var loadMetadata = function() {
+      // load combined metadata
+      $http.get('api/metadata?include=allegiance&include=government&include=security')
+        .success(function (metadata) {
+          $scope.metadata = metadata;
+        });
+
       // load star systems
       $http.get('api/metadata/starSystemList')
         .success(function (starSystemList) {
           $scope.starSystemList = starSystemList;
         });
 
-      // load allegiance list
-      $http.get('api/metadata/allegianceList')
-        .success(function (allegianceList) {
-          $scope.allegianceList = allegianceList;
-        });
-
       // load faction list
       $http.get('api/metadata/factionList')
         .success(function (factionList) {
           $scope.factionList = factionList;
-        });
-
-      // load government list
-      $http.get('api/metadata/governmentList')
-        .success(function (governmentList) {
-          $scope.governmentList = governmentList;
-        });
-
-      // load security list
-      $http.get('api/metadata/securityList')
-        .success(function (securityList) {
-          $scope.securityList = securityList;
         });
     };
 
@@ -54,17 +42,11 @@ angular.module('eliteApp')
           starSystemList: function() {
             return $scope.starSystemList;
           },
-          allegianceList: function() {
-            return $scope.allegianceList;
+          metadata: function() {
+            return $scope.metadata;
           },
           factionList: function() {
             return $scope.factionList;
-          },
-          governmentList: function() {
-            return $scope.governmentList;
-          },
-          securityList: function() {
-            return $scope.securityList;
           }
         }
       });
@@ -120,6 +102,7 @@ angular.module('eliteApp')
         { field: 'allegiance', displayName: 'ALLEGIANCE' },
         { field: 'security', displayName: 'SECURITY' }
       ],
+      plugins: [new ngGridFlexibleHeightPlugin()],
       
       afterSelectionChange: function(rowItem, event) {
         if (!rowItem.selected) {

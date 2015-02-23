@@ -105,6 +105,9 @@ exports.update = function(req, res) {
       // merge the new starport data
       var updatedStarport = _.merge(starport, req.body);
 
+      console.log('saving starport');
+      console.log(updatedStarport);
+
       var newStarSystemName = req.body.starSystem.name;
       // remove star system from body
       delete req.body.starSystem;

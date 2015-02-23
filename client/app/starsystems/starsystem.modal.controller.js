@@ -1,12 +1,10 @@
 'use strict'
 
 angular.module('eliteApp')
-  .controller('starSystemModalController', function($scope, $modalInstance, $modal, starsystem, starSystemList, allegianceList, factionList, governmentList, securityList) {
+  .controller('starSystemModalController', function($scope, $modalInstance, $modal, starsystem, starSystemList, metadata, factionList) {
     $scope.starsystem = starsystem;
     $scope.starSystemList = starSystemList;
-    $scope.allegianceList = allegianceList;
-    $scope.governmentList = governmentList;
-    $scope.securityList = securityList;
+    $scope.metadata = metadata;
     $scope.factionList = factionList;
     $scope.selectedLinkedStarSystem = null;
 
@@ -14,11 +12,12 @@ angular.module('eliteApp')
       data: 'starsystem.linkedStarSystems',
       enableSorting: false,
       multiSelect: false,
-      height: '50px',
+      height: '75px',
       columnDefs: [
         { field: 'starSystem.name', displayName: 'NAME' },
         { field: 'distance', displayName: 'DISTANCE' }
       ],
+      plugins: [new ngGridFlexibleHeightPlugin()],
       
       afterSelectionChange: function(rowItem, event) {
         $scope.selectedLinkedStarSystem = rowItem.entity;

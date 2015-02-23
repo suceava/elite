@@ -1,11 +1,11 @@
 'use strict'
 
 angular.module('eliteApp')
-  .controller('starPortModalController', function($scope, $modalInstance, starport, starSystemList, allegianceList, factionList, governmentList) {
+  .controller('starPortModalController', function($scope, $modalInstance, starport, metadata, starSystemList, commodityList, factionList) {
     $scope.starport = starport;
+    $scope.metadata = metadata;
     $scope.starSystemList = starSystemList;
-    $scope.allegianceList = allegianceList;
-    $scope.governmentList = governmentList;
+    $scope.commodityList = commodityList;
     $scope.factionList = factionList;
 
     $scope.ok = function() {

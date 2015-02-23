@@ -13,28 +13,28 @@ angular.module('eliteApp')
     };
 
     var loadMetadata = function() {
+      // load combined metadata
+      $http.get('api/metadata?include=allegiance&include=economy&include=facility&include=government&include=security')
+        .success(function (metadata) {
+          $scope.metadata = metadata;
+        });
+
       // load star systems
       $http.get('api/metadata/starSystemList')
         .success(function (starSystemList) {
           $scope.starSystemList = starSystemList;
         });
 
-      // load allegiance list
-      $http.get('api/metadata/allegianceList')
-        .success(function (allegianceList) {
-          $scope.allegianceList = allegianceList;
+      // load commodities
+      $http.get('api/metadata/commodityList')
+        .success(function (commodityList) {
+          $scope.commodityList = commodityList;
         });
 
       // load faction list
       $http.get('api/metadata/factionList')
         .success(function (factionList) {
           $scope.factionList = factionList;
-        });
-
-      // load government list
-      $http.get('api/metadata/governmentList')
-        .success(function (governmentList) {
-          $scope.governmentList = governmentList;
         });
     };
 
@@ -49,14 +49,14 @@ angular.module('eliteApp')
           starSystemList: function() {
             return $scope.starSystemList;
           },
-          allegianceList: function() {
-            return $scope.allegianceList;
+          metadata: function() {
+            return $scope.metadata;
+          },
+          commodityList: function() {
+            return $scope.commodityList;
           },
           factionList: function() {
             return $scope.factionList;
-          },
-          governmentList: function() {
-            return $scope.governmentList;
           }
         }
       });
@@ -104,7 +104,8 @@ angular.module('eliteApp')
         { field: 'starports.government', displayName: 'GOVERNMENT' },
         { field: 'starports.allegiance', displayName: 'ALLEGIANCE' }
       ],
-      
+      plugins: [new ngGridFlexibleHeightPlugin()],
+    
       afterSelectionChange: function(rowItem, event) {
         $scope.selectedStarPort = rowItem.entity.starports;
         return true;
