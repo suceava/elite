@@ -44,6 +44,20 @@ angular.module('eliteApp')
             console.log(commodity);
             if (commodity._id) {
               // edit
+              $http.put('api/commodities/' + commodity._id, commodity)
+                .success(function () {
+                  // refresh
+                  loadData();
+                })
+                .error(function (data, status, headers, config) {
+                  console.log(data);
+                  if (data && data.message) {
+                    alert(data.message);
+                  }
+                  else {
+                    alert('Error updating commodity');
+                  }
+                });
             }
             else {
               // add
@@ -54,14 +68,17 @@ angular.module('eliteApp')
                 })
                 .error(function (data, status, headers, config) {
                   console.log(data);
-                  alert(data.message);
+                  if (data && data.message) {
+                    alert(data.message);
+                  }
+                  else {
+                    alert('Error adding commodity');
+                  }
                 });
             }
           });
         });
     };
-
-
 
     $scope.commodities = [];
 
@@ -73,7 +90,7 @@ angular.module('eliteApp')
       multiSelect: false,
       columnDefs: [
         { field: 'type', displayName: 'TYPE', visible: false },
-        { field: 'name', displayName: 'NAME' },
+        { field: 'name', displayName: 'NAME', width: '250px' },
         { field: 'producedBy.join(",")', displayName: 'PRODUCED BY' },
         { field: 'consumedBy.join(",")', displayName: 'CONSUMED BY' }
       ],
@@ -96,7 +113,7 @@ angular.module('eliteApp')
     };
 
     $scope.showEditModal = function() {
-      showAddEditModal(null);
+      showAddEditModal($scope.selectedCommodity);
     };
 
     $scope.confirmDelete = function() {

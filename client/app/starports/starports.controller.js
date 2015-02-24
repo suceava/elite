@@ -72,7 +72,12 @@ angular.module('eliteApp')
             })
             .error(function (data, status, headers, config) {
               console.log(data);
-              alert(data.message);
+              if (data && data.message) {
+                alert(data.message);
+              }
+              else {
+                alert('Error updating starport');
+              }
             });
         }
         else {
@@ -84,7 +89,12 @@ angular.module('eliteApp')
             })
             .error(function (data, status, headers, config) {
               console.log(data);
-              alert(data.message);
+              if (data && data.message) {
+                alert(data.message);
+              }
+              else {
+                alert('Error adding starport');
+              }
             });
         }
       });

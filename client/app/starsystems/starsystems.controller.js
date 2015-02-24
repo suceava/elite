@@ -97,7 +97,6 @@ angular.module('eliteApp')
       multiSelect: false,
       columnDefs: [
         { field: 'name', displayName: 'NAME' },
-        { field: 'controllingFaction', displayName: 'FACTION' },
         { field: 'government', displayName: 'GOVERNMENT' },
         { field: 'allegiance', displayName: 'ALLEGIANCE' },
         { field: 'security', displayName: 'SECURITY' }

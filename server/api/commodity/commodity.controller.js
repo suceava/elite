@@ -9,6 +9,7 @@
 
 'use strict'
 
+var _ = require('lodash');
 var Commodity = require('./commodity.model');
 
 exports.index = function (req, res) {
@@ -23,6 +24,21 @@ exports.index = function (req, res) {
     });
 }
 
+exports.show = function (req, res) {
+  Commodity
+    .findById(req.params.id)
+    .exec(function (err, commodity) {
+      if (err) {
+        return res.send(500, err);
+      }
+      if (!commodity) {
+        return errors[404](req, res);
+      }
+
+      return res.json(commodity);
+    })
+};
+
 exports.create = function (req, res) {
   Commodity.create(req.body, function (err, commodity) {
     if (err) {
@@ -30,6 +46,38 @@ exports.create = function (req, res) {
     }
 		return res.json(201, commodity);
 	});
+}
+
+exports.update = function(req, res) {
+  if (req.body._id) {
+    // remove _id from request body
+    delete req.body._id;
+  }
+
+  Commodity
+    .findById(req.params.id)
+    .exec()
+    .then(function (commodity) {
+      if (!commodity) {
+        return res.send(404);
+      }
+
+      var updated = _.merge(commodity, req.body);
+      
+      // mark changed fields
+      updated.markModified('producedBy');
+      updated.markModified('consumedBy');
+
+      updated.save(function (err) {
+        if (err) { 
+          return res.send(500, err);  
+        }
+
+        return res.json(200, commodity);
+      });
+    }, function(err) {
+      return res.send(500, err);  
+    });
 }
 
 exports.destroy = function(req, res) {
