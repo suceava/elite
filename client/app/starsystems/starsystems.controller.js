@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module('eliteApp')
-  .controller('starSystemsController', function ($scope, $http, $modal) {
+  .controller('starSystemsController', function ($scope, $http, $modal, $window) {
 
     var loadData = function() {
       $scope.selectedStarSystem = null;
@@ -101,7 +101,7 @@ angular.module('eliteApp')
         { field: 'allegiance', displayName: 'ALLEGIANCE' },
         { field: 'security', displayName: 'SECURITY' }
       ],
-      plugins: [new ngGridFlexibleHeightPlugin()],
+      plugins: [new ngGridFlexibleHeightPlugin({ maxHeight: $window.innerHeight - 350 })],
       
       afterSelectionChange: function(rowItem, event) {
         if (!rowItem.selected) {

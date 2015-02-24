@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module('eliteApp')
-  .controller('commoditiesController', function ($scope, $http, $modal) {
+  .controller('commoditiesController', function ($scope, $http, $modal, $window) {
 
     var loadData = function() {
       $scope.selectedCommodity = null;
@@ -94,7 +94,7 @@ angular.module('eliteApp')
         { field: 'producedBy.join(",")', displayName: 'PRODUCED BY' },
         { field: 'consumedBy.join(",")', displayName: 'CONSUMED BY' }
       ],
-      plugins: [new ngGridFlexibleHeightPlugin()],
+      plugins: [new ngGridFlexibleHeightPlugin({ maxHeight: $window.innerHeight - 350 })],
       aggregateTemplate: '<div ng-style="rowStyle(row)" class="ngAggregate ng-scope"><span class="ngAggregateText">{{toUpperCase(row.label)}}</span></div>',
       
       afterSelectionChange: function(rowItem, event) {

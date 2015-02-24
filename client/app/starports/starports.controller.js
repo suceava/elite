@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module('eliteApp')
-  .controller('starportsController', function ($scope, $http, $modal) {
+  .controller('starportsController', function ($scope, $http, $modal, $window) {
 
     var loadData = function() {
       $scope.selectedStarPort = null;
@@ -114,7 +114,7 @@ angular.module('eliteApp')
         { field: 'starports.government', displayName: 'GOVERNMENT' },
         { field: 'starports.allegiance', displayName: 'ALLEGIANCE' }
       ],
-      plugins: [new ngGridFlexibleHeightPlugin()],
+      plugins: [new ngGridFlexibleHeightPlugin({ maxHeight: $window.innerHeight - 350 })],
     
       afterSelectionChange: function(rowItem, event) {
         $scope.selectedStarPort = rowItem.entity.starports;

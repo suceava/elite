@@ -38,6 +38,8 @@
  * App-wide Styles
  */
 
+html {
+}
 body {
   font-family: eurostile;
   background-color: rgb(11,11,11);
