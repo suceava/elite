@@ -9,7 +9,7 @@ var StarportSchema = new Schema({
   faction: String,
   government: String,
   allegiance: String,
-  facillities: [String],
+  facilities: [String],
   economies: [String],
   imports: [{ type: Schema.Types.ObjectId, ref: 'Commodity' }],
   exports: [{ type: Schema.Types.ObjectId, ref: 'Commodity' }],
