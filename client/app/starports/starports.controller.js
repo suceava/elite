@@ -110,11 +110,12 @@ angular.module('eliteApp')
       multiSelect: false,
       columnDefs: [
         { field: 'starports.name', displayName: 'NAME' },
+        { field: 'name', displayName: 'SYSTEM' },
         { field: 'starports.faction', displayName: 'FACTION' },
         { field: 'starports.government', displayName: 'GOVERNMENT' },
         { field: 'starports.allegiance', displayName: 'ALLEGIANCE' }
       ],
-      plugins: [new ngGridFlexibleHeightPlugin({ maxHeight: $window.innerHeight - 350 })],
+      plugins: [new ngGridFlexibleHeightPlugin({ maxHeight: $window.innerHeight - 350, window: $window })],
     
       afterSelectionChange: function(rowItem, event) {
         $scope.selectedStarPort = rowItem.entity.starports;

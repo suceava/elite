@@ -101,7 +101,7 @@ angular.module('eliteApp')
         { field: 'allegiance', displayName: 'ALLEGIANCE' },
         { field: 'security', displayName: 'SECURITY' }
       ],
-      plugins: [new ngGridFlexibleHeightPlugin({ maxHeight: $window.innerHeight - 350 })],
+      plugins: [new ngGridFlexibleHeightPlugin({ maxHeight: $window.innerHeight - 350, window: $window })],
       
       afterSelectionChange: function(rowItem, event) {
         if (!rowItem.selected) {

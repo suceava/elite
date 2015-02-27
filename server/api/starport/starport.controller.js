@@ -11,7 +11,7 @@ exports.index = function (req, res) {
 
   StarSystem.aggregate([
       { $unwind: "$starports" },
-      { $project: { starports: 1 } },
+      { $project: { starports: 1, name: 1 } },
       { $sort: { "starports.name": 1 }}
     ],
     function (err, starports) {

@@ -82,8 +82,6 @@ angular.module('eliteApp')
 
     $scope.commodities = [];
 
-    //var ngGridLayoutPlugin = new ngGridLayoutPlugin();
-
     $scope.gridOptions = { 
       data: 'commodities',
       groups: [ 'type' ],
@@ -96,10 +94,7 @@ angular.module('eliteApp')
         { field: 'producedBy.join(",")', displayName: 'PRODUCED BY' },
         { field: 'consumedBy.join(",")', displayName: 'CONSUMED BY' }
       ],
-      plugins: [
-        new ngGridFlexibleHeightPlugin({ maxHeight: $window.innerHeight - 350, window: $window }),
-        new ngGridLayoutPlugin()
-      ],
+      plugins: [ new ngGridFlexibleHeightPlugin({ maxHeight: $window.innerHeight - 350, window: $window }) ],
       aggregateTemplate: '<div ng-style="rowStyle(row)" class="ngAggregate ng-scope"><span class="ngAggregateText">{{toUpperCase(row.label)}}</span></div>',
       
       afterSelectionChange: function(rowItem, event) {
