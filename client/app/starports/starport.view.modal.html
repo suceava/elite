@@ -1,0 +1,107 @@
+<div class="modal-header">
+  <h3 class="modal-title">{{starport.name}}</h3>
+</div>
+<div class="modal-body">
+  <div class="row">
+    <div class="col-md-4">
+      <!-- left col -->
+      <div class="row">
+        <div class="col-md-4">
+          STAR SYSTEM
+        </div>
+        <div class="col-md-8">
+          {{starport.starSystem.name}} ({{starport.distanceFromStar}} LS)
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          FACTION
+        </div>
+        <div class="col-md-8">
+          {{starport.faction}}
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          GOVERNMENT
+        </div>
+        <div class="col-md-8">
+          {{starport.government}}
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          ALLEGIANCE
+        </div>
+        <div class="col-md-8">
+          {{starport.allegiance}}
+        </div>
+      </div>
+
+      <hr/>
+
+      <div class="row">
+        <div class="col-md-4">
+          FACILITIES
+        </div>
+        <div class="col-md-8">
+          <div ng-repeat="fac in starport.facilities">{{fac}}</div>
+        </div>
+      </div>
+
+      <hr/>
+
+      <div class="row">
+        <div class="col-md-4">
+          ECONOMIES
+        </div>
+        <div class="col-md-8">
+          <div ng-repeat="eco in starport.economies">{{eco}}</div>
+        </div>
+      </div>
+
+      <hr/>
+
+      <div class="row">
+        <div class="col-md-4">
+          IMPORTS
+        </div>
+        <div class="col-md-8">
+          <div ng-repeat="imp in starport.imports">{{imp.name}}</div>
+        </div>
+      </div>
+
+      <hr/>
+
+      <div class="row">
+        <div class="col-md-4">
+          EXPORTS
+        </div>
+        <div class="col-md-8">
+          <div ng-repeat="exp in starport.exports">{{exp.name}}</div>
+        </div>
+      </div>
+
+      <hr/>
+
+      <div class="row">
+        <div class="col-md-4">
+          PROHIBITED
+        </div>
+        <div class="col-md-8">
+          <div ng-repeat="prh in starport.prohibited">{{prh.name}}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <!-- mid col -->
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button class="btn eliteButton" ng-click="cancel()">CLOSE</button>
+</div>

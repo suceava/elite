@@ -39,11 +39,15 @@
  */
 
 html {
+  height: 100%;
+  width; 100%;
 }
 body {
   font-family: eurostile;
   background-color: rgb(11,11,11);
   color: #ff8c0d;
+  height: 100%;
+  width; 100%;
 }
 footer {
   color: #FF8C0D;
@@ -51,6 +55,11 @@ footer {
   margin-top:40px;
   padding-top: 10px;
   border-top: 1px solid rgba(255,140,14,0.50);
+}
+hr {
+  border-color: #ff8c0d;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .container {
@@ -149,6 +158,19 @@ footer {
 }
 .modal-dialog .modal-body {
   max-height: 500px;
+  overflow-y: auto;
+}
+
+
+.eliteView .modal-dialog {
+  width: 90%;
+  height: 90%;
+}
+.eliteView .modal-content {
+  height: 100%;
+}
+.eliteView .modal-body {
+  height: 75%;
   overflow-y: auto;
 }
 

@@ -19,7 +19,7 @@ var StarSystemSchema = new Schema({
     distance: Number
   }],
 
-  starports : [ Starport.Schema ]
+  starports : [ Starport.schema ]
 });
 
 StarSystemSchema.methods = {

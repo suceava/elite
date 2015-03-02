@@ -26,6 +26,8 @@ exports.show = function (req, res) {
   StarSystem
     .find({ 'starports._id': new mongoose.Types.ObjectId(req.params.id) },
       { 'starports.$': 1, name: 1 })
+    .populate('starports.imports starports.exports starports.prohibited')
+    .lean() // json object so we can add more props
     .exec(function (err, starsystems) {
       if (err) {
         return res.send(500, err);

@@ -38,6 +38,20 @@ angular.module('eliteApp')
         });
     };
 
+    var showViewModal = function(starport) {
+      var modal = $modal.open({
+        templateUrl: 'app/starports/starport.view.modal.html',
+        controller: 'starPortViewModalController',
+        windowClass: 'eliteView',
+        size: 'lg',
+        resolve: {
+          starport: function() {
+            return starport;
+          }
+        }
+      });
+    };
+
     var showAddEditModal = function(starport) {
       var modal = $modal.open({
         templateUrl: 'app/starports/starport.modal.html',
@@ -115,6 +129,13 @@ angular.module('eliteApp')
         { field: 'starports.government', displayName: 'GOVERNMENT' },
         { field: 'starports.allegiance', displayName: 'ALLEGIANCE' }
       ],
+      rowTemplate:'<div ng-dblclick="onDblClickRow(row)" ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell ">' +
+                           '<div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }"> </div>' +
+                           '<div ng-cell></div>' +
+                  '</div>',
+
+
+//      rowTemplate: '<div ng-dblclick="onDblClickRow(row)" ng-style="{ ''cursor'': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}"><div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }">&nbsp;</div><div ng-cell></div></div>'
       plugins: [new ngGridFlexibleHeightPlugin({ maxHeight: $window.innerHeight - 350, window: $window })],
     
       afterSelectionChange: function(rowItem, event) {
@@ -123,6 +144,17 @@ angular.module('eliteApp')
       }
     };
 
+    $scope.onDblClickRow = function(row) {
+      if (!$scope.selectedStarPort) {
+        return;
+      }
+
+      // re-load star port from server
+      $http.get('api/starports/' + $scope.selectedStarPort._id)
+        .success(function(starport) {
+          showViewModal(starport);
+        });
+    };
 
     $scope.showAddModal = function() {
       showAddEditModal({

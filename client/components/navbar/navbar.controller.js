@@ -6,14 +6,14 @@ angular.module('eliteApp')
       'title': 'Home',
       'link': '/'
     }, {
-      'title': 'Commodities',
-      'link': '/commodities'
-    }, {
       'title': 'Star Systems',
       'link': '/starsystems'
     }, {
       'title': 'Star Ports',
       'link': '/starports'
+    }, {
+      'title': 'Commodities',
+      'link': '/commodities'
     }];
 
     $scope.isCollapsed = true;

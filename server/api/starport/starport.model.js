@@ -2,6 +2,7 @@
 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var CommodityPrice = require('../commodityPrice/commodityPrice.model');
 
 var StarportSchema = new Schema({
   name: { type: String, required: true },
@@ -15,7 +16,9 @@ var StarportSchema = new Schema({
   exports: [{ type: Schema.Types.ObjectId, ref: 'Commodity' }],
   prohibited: [{ type: Schema.Types.ObjectId, ref: 'Commodity' }],
   created: { type: Date, default: Date.now },
-  createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true }
+  createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+
+  latestCommodityPrices: [CommodityPrice.schema]
 });
 
 module.exports = mongoose.model('Starport', StarportSchema);
