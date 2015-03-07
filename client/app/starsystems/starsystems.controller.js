@@ -6,7 +6,7 @@ angular.module('eliteApp')
     var loadData = function() {
       $scope.selectedStarSystem = null;
 
-      $http.get('api/starsystems?fields=name&fields=controllingFaction&fields=government&fields=allegiance&fields=security')
+      $http.get('api/starsystems?fields=name&fields=controllingFaction&fields=government&fields=allegiance&fields=security&fields=isCompleted')
         .success(function (starsystems) {
           $scope.starsystems = starsystems;
         });
@@ -99,7 +99,13 @@ angular.module('eliteApp')
         { field: 'name', displayName: 'NAME' },
         { field: 'government', displayName: 'GOVERNMENT' },
         { field: 'allegiance', displayName: 'ALLEGIANCE' },
-        { field: 'security', displayName: 'SECURITY' }
+        { field: 'security', displayName: 'SECURITY' },
+        { 
+          field: 'isCompleted', 
+          displayName: '',
+          cellTemplate: '<div class="ngCellText glyphicon" ng-class="{\'glyphicon-ok\': row.getProperty(col.field)}"></div>',
+          width: '32px' 
+        }
       ],
       plugins: [new ngGridFlexibleHeightPlugin({ maxHeight: $window.innerHeight - 350, window: $window })],
       

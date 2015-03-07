@@ -5,10 +5,12 @@ var Schema = mongoose.Schema;
 
 var CommodityPriceSchema = new Schema({
   commodity: { type: Schema.Types.ObjectId, ref: 'Commodity' },
-  sell: Number,
-  buy: Number,
+  sellPrice: Number,
+  buyPrice: Number,
   demand: Number,
-  suply: Number,
+  demandString: String,
+  supply: Number,
+  supplyString: String,
   priceDate: Date
 });
 

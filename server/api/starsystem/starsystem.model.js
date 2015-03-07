@@ -13,6 +13,7 @@ var StarSystemSchema = new Schema({
   security: String,
   created: { type: Date, default: Date.now },
   createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  isCompleted: { type: Boolean, default: false },
 
   linkedStarSystems: [{
     starSystem: { type: Schema.Types.ObjectId, ref: 'StarSystem' },
@@ -57,7 +58,7 @@ StarSystemSchema.methods = {
   removeLinkedStarSystem: function(starSystemId) {
     var promise = new mongoose.Promise();
 
-    // remove the give star system from our list of linked systems
+    // remove the given star system from our list of linked systems
     _.remove(this.linkedStarSystems, function(elem) {
       var id = (elem.starSystem._id) ? elem.starSystem._id : elem.starSystem;
       return starSystemId.equals(id);
@@ -143,6 +144,19 @@ StarSystemSchema.statics.findByName = function(starSystemName) {
   return this
     .findOne({ 'name': starSystemName })
     .populate('linkedStarSystems.starSystem', 'name')
+    .exec();
+}
+
+/**
+ * Find a starport by name
+ * 
+ * @param {String} starportName
+ * @return {Promise}
+ */
+StarSystemSchema.statics.findStarportByName = function(starportName) {
+  // find the starport by name
+  return this
+    .findOne({ 'starports.name': starportName })
     .exec();
 }
 

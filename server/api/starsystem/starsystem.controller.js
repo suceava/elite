@@ -18,7 +18,7 @@ exports.index = function (req, res) {
       }
       return res.json(starsystems);
     });
-}
+};
 
 exports.show = function (req, res) {
   StarSystem
@@ -34,6 +34,25 @@ exports.show = function (req, res) {
 
       return res.json(starsystem);
     })
+};
+
+exports.find = function (req, res) {
+  if (!req.query.name) {
+    return res.json(400, 'Invalid star system name');
+  }
+
+  StarSystem
+    .findByName(req.query.name)
+    .then(function (starsystem) {
+      if (!starsystem) {
+        return errors[404](req, res);
+      }
+
+      return res.json(starsystem);
+    }, function(err) {
+      // error
+      return res.json(400, err);
+    });
 };
 
 /* ADD */
@@ -58,7 +77,7 @@ exports.create = function (req, res) {
     }
 
     // now update the linked star systems
-    updateLinkedSystems(starsystem, postedLinkedStarSystems, function(err, linkedStarSystems) {
+    updateLinkedSystems(starsystem, postedLinkedStarSystems, req.user, function(err, linkedStarSystems) {
       if (err) {
         return res.json(400, err);
       }
@@ -91,7 +110,7 @@ exports.update = function(req, res) {
         return res.send(404);
       }
 
-      updateLinkedSystems(starsystem, req.body.linkedStarSystems, function(err, linkedStarSystems) {
+      updateLinkedSystems(starsystem, req.body.linkedStarSystems, req.user, function(err, linkedStarSystems) {
         if (err) {
           return res.json(400, err);
         }
@@ -117,20 +136,32 @@ exports.update = function(req, res) {
 
 /* DELETE */
 exports.destroy = function(req, res) {
-  StarSystem.findById(req.params.id, function (err, starsystem) {
-    if (err) {
-      return res.send(500, err);
-    }
-    if (!starsystem) {
-      return res.send(404);
-    }
-    starsystem.remove(function(err) {
-      if (err) {
-        return res.send(500, err);
+  StarSystem
+    .findById(req.params.id)
+    .populate('linkedStarSystems.starSystem', 'name')
+    .exec()
+    .then(function (starsystem) {
+      if (!starsystem) {
+        return res.send(404);
       }
-      return res.send(204);
+
+      // first we remove the link to this system from all linked systems
+      updateDeletedLinks(starsystem.linkedStarSystems, starsystem)
+        .then(function() {
+          // deleted links updated => now remove this system
+          starsystem.remove(function(err) {
+            if (err) {
+              return res.send(500, err);
+            }
+            return res.send(204);
+          });
+        })
+        .then(null, function(err) {
+          return res.send(500, err);
+        });
+    }, function(err) {
+      return res.send(500, err);  
     });
-  });
 };
 
 /* RECENTLY ADDED SYSTEMS */
@@ -148,7 +179,7 @@ exports.recent = function(req, res) {
 
 
 
-  var updateLinkedSystems = function(thisSystem, linkedStarSystems, callback) {
+  var updateLinkedSystems = function(thisSystem, linkedStarSystems, user, callback) {
     // update the star system's list of linked systems from the list sent from the client
     if (!linkedStarSystems) {
       callback(null, null);
@@ -158,7 +189,7 @@ exports.recent = function(req, res) {
     console.log(linkedStarSystems);
 
     // update the 2-way links for the other systems first
-    updateLinksOnLinkedSystems(thisSystem, linkedStarSystems)
+    updateLinksOnLinkedSystems(thisSystem, linkedStarSystems, user)
       .then(function() {
         // update the links for this system
         return thisSystem.updateLinkedSystems(linkedStarSystems);
@@ -176,7 +207,7 @@ exports.recent = function(req, res) {
     return;
   };
 
-  var updateLinksOnLinkedSystems = function(thisSystem, linkedStarSystems) {
+  var updateLinksOnLinkedSystems = function(thisSystem, linkedStarSystems, user) {
     var promise = new mongoose.Promise(),
         deletedLinks, addedLinks, changedLinks;
 
@@ -193,8 +224,8 @@ exports.recent = function(req, res) {
         }
         return true;
       });
-      console.log('delted links');
-      console.log(deletedLinks);
+console.log('deleted links');
+console.log(deletedLinks);
 
       // added links
       addedLinks = linkedStarSystems.filter(function(elem) {
@@ -208,8 +239,8 @@ exports.recent = function(req, res) {
         }
         return true;
       });
-      console.log('added links');
-      console.log(addedLinks);
+console.log('added links');
+console.log(addedLinks);
     }
     else {
       // current system has no links => all new are added
@@ -219,7 +250,7 @@ exports.recent = function(req, res) {
     updateDeletedLinks(deletedLinks, thisSystem)
       .then(function() {
         // deleted links updated
-        return updateAddedLinks(addedLinks, thisSystem);
+        return updateAddedLinks(addedLinks, thisSystem, user);
       })
       .then(function() {
         // added links updated
@@ -241,12 +272,22 @@ exports.recent = function(req, res) {
 
       // remove links to this system from deleted linked systems
       _.forEach(deletedLinks, function(link) {
+        if (!link.starSystem || !link.starSystem._id) {
+          // star system is gone => skip it
+          linkedLength--;
+          return;
+        }
+
         StarSystem
           .findById(link.starSystem._id)
           .populate('linkedStarSystems.starSystem', 'name')
           .exec()
           .then(function (system) {
             return system.removeLinkedStarSystem(thisSystem._id);
+          }, function (err) {
+console.log('error finding system in updateDeletedLinks - ' + link.starSystem._id);
+console.log(err);
+            return new mongoose.Promise().reject(err);
           })
           .then(function(system) {
             if (++linked == linkedLength) {
@@ -266,8 +307,9 @@ exports.recent = function(req, res) {
     return promise;
   };
 
-  var updateAddedLinks = function(addedLinks, thisSystem) {
+  var updateAddedLinks = function(addedLinks, thisSystem, user) {
     var promise = new mongoose.Promise();
+console.log('updateAddedLinks');
 
     if (addedLinks && addedLinks.length) {
       var linked = 0,
@@ -278,15 +320,54 @@ exports.recent = function(req, res) {
         StarSystem
           .findByName(link.starSystem.name)
           .then(function (system) {
-            if (system) {
-              // cache the id
-              link.starSystem._id = system._id;
+            var addPromise = new mongoose.Promise();
+console.log('after found system by name for ' + link.starSystem.name);
 
-              return system.addLinkedStarSystem({ 
-                starSystem: thisSystem._id,
-                distance: link.distance
-              });
+            if (!system) {
+              // system not found but we will add it
+console.log('system not found => add it ' + link.starSystem.name);
+
+              StarSystem
+                .create({
+                  name: link.starSystem.name,
+                  createdBy: user
+                })
+                .then(function (newSystem) {
+                  // system added
+console.log('new linked system added ' + newSystem.name);
+                  addPromise.resolve(null, newSystem);
+                },
+                function (err) {
+                  // error adding new system ??
+console.log('error creating new system ');
+console.log(err);
+                  addPromise.reject(err);
+                });
             }
+            else {
+              // simply resolve the promise
+              addPromise.resolve(null, system);
+            }
+
+            addPromise
+              .then(function (system) {
+console.log('adding linked system to ' + system.name);
+                if (system) {
+                  // cache the id
+                  link.starSystem._id = system._id;
+
+                  return system.addLinkedStarSystem({ 
+                    starSystem: thisSystem._id,
+                    distance: link.distance
+                  });
+                }
+              }, function (err) {
+                console.log('error in addPromise');
+                console.log(err);
+                promise.reject(err);
+              });
+
+            return addPromise;
           })
           .then(function (system) {
             if (++linked == linkedLength) {
@@ -294,6 +375,8 @@ exports.recent = function(req, res) {
             }
           })
           .then(null, function(err) {
+            console.log('error in add updateAddedLinks');
+            console.log(err);
             promise.reject(err);
           });
       });

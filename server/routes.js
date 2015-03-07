@@ -14,6 +14,7 @@ module.exports = function(app) {
   app.use('/api/starsystems', require('./api/starsystem'));
   app.use('/api/starports', require('./api/starport'));
   app.use('/api/commodities', require('./api/commodity'));
+  app.use('/api/marketPrices', require('./api/marketPrice'));
 
   app.use('/auth', require('./auth'));
   

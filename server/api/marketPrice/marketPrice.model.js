@@ -9,14 +9,17 @@ var MarketPriceSchema = new Schema({
   // since mongoose doesn't support embedding a schema as a single object
   // we have to re-define the commodityPrice schema inline
   commodity: { type: Schema.Types.ObjectId, ref: 'Commodity' },
-  sell: Number,
-  buy: Number,
+  sellPrice: Number,
+  buyPrice: Number,
   demand: Number,
-  suply: Number,
+  demandString: String,
+  supply: Number,
+  supplyString: String,
   priceDate: Date,
 
   imageUrl: String,
-  clientUserInfo: String, // this is the user sent by the client
+  clientUser: String, // this is the user sent by the client
+  isVerified: { type: Boolean, default: false },
 
   created: { type: Date, default: Date.now },
   createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true }

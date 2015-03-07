@@ -22,7 +22,7 @@ exports.index = function (req, res) {
       }
 		  return res.json(commodities);
     });
-}
+};
 
 exports.show = function (req, res) {
   Commodity
@@ -46,7 +46,7 @@ exports.create = function (req, res) {
     }
 		return res.json(201, commodity);
 	});
-}
+};
 
 exports.update = function(req, res) {
   if (req.body._id) {
