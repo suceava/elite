@@ -119,6 +119,15 @@ hr {
   left: 7px !important;
 }
 
+/* market prices grid */
+.eliteMarketPricesGrid .colt3,
+.eliteMarketPricesGrid .colt4,
+.eliteMarketPricesGrid .colt5,
+.eliteMarketPricesGrid .colt6,
+.eliteMarketPricesGrid .colt7 {
+  text-align: right;
+}
+
 /* button */
 .eliteButton {
   color: #ff8c0d;
