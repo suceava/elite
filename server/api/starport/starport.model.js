@@ -16,9 +16,7 @@ var StarportSchema = new Schema({
   exports: [{ type: Schema.Types.ObjectId, ref: 'Commodity' }],
   prohibited: [{ type: Schema.Types.ObjectId, ref: 'Commodity' }],
   created: { type: Date, default: Date.now },
-  createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-
-  latestCommodityPrices: [CommodityPrice.schema]
+  createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true }
 });
 
 module.exports = mongoose.model('Starport', StarportSchema);

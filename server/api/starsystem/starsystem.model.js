@@ -154,10 +154,26 @@ StarSystemSchema.statics.findByName = function(starSystemName) {
  * @return {Promise}
  */
 StarSystemSchema.statics.findStarportByName = function(starportName) {
+  var promise = new mongoose.Promise();
+
   // find the starport by name
-  return this
-    .findOne({ 'starports.name': starportName })
-    .exec();
+  this
+    .findOne({ 'starports.name': starportName },
+      {'starports.$': 1})
+    .exec()
+    .then(function (starsystem) {
+      if (!starsystem || !starsystem.starports || !starsystem.starports.length) {
+        promise.reject();
+        return;
+      }
+
+      // found starsystem with starport
+      promise.resolve(null, starsystem.starports[0]);
+    }, function (err) {
+      promise.reject(err);
+    });
+
+    return promise;
 }
 
 module.exports = mongoose.model('StarSystem', StarSystemSchema);

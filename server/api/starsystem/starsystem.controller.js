@@ -185,8 +185,8 @@ exports.recent = function(req, res) {
       callback(null, null);
       return;
     }
-    console.log('updateLinkedSystems');
-    console.log(linkedStarSystems);
+console.log('updateLinkedSystems');
+console.log(linkedStarSystems);
 
     // update the 2-way links for the other systems first
     updateLinksOnLinkedSystems(thisSystem, linkedStarSystems, user)
@@ -196,7 +196,7 @@ exports.recent = function(req, res) {
       })
       .then(function() {
         // all done
-        console.log('updated');
+console.log('updated');
         callback(null, thisSystem.linkedStarSystems);
       })
       .then(null, function(err) {

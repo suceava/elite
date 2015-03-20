@@ -6,6 +6,9 @@ angular.module('eliteApp')
       'title': 'Home',
       'link': '/'
     }, {
+      'title': 'Market Prices',
+      'link': '/marketPrices'
+    }, {
       'title': 'Star Systems',
       'link': '/starsystems'
     }, {

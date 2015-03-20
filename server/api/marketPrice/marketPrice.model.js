@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var MarketPriceSchema = new Schema({
-  starport: { type: Schema.Types.ObjectId, ref: 'StarPort' },
+  starport: { type: Schema.Types.ObjectId, ref: 'Starport' },
 
   // since mongoose doesn't support embedding a schema as a single object
   // we have to re-define the commodityPrice schema inline
@@ -22,7 +22,7 @@ var MarketPriceSchema = new Schema({
   isVerified: { type: Boolean, default: false },
 
   created: { type: Date, default: Date.now },
-  createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true }
+  createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: false }
 });
 
 module.exports = mongoose.model('MarketPrice', MarketPriceSchema);
