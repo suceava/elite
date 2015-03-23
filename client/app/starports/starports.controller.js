@@ -152,7 +152,11 @@ angular.module('eliteApp')
       // re-load star port from server
       $http.get('api/starports/' + $scope.selectedStarPort._id)
         .success(function(starport) {
-          showViewModal(starport);
+          $http.get('api/starports/latestMarketPrices/' + $scope.selectedStarPort._id)
+            .success(function(latestMarketPrices) {
+              starport.latestMarketPrices = latestMarketPrices;
+              showViewModal(starport);
+            });
         });
     };
 

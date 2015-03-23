@@ -4,6 +4,7 @@ var _ = require('lodash');
 var mongoose = require('mongoose');
 var StarPort = require('./starport.model');
 var StarSystem = require('../starsystem/starsystem.model');
+var MarketPrice = require('../marketPrice/marketPrice.model');
 var errors = require('../../components/errors');
 
 exports.index = function (req, res) {
@@ -177,6 +178,16 @@ exports.recent = function(req, res) {
         return res.send(500, err);  
       }
       return res.json(starports);
+    });
+};
+
+exports.latestMarketPrices = function(req, res) {
+  MarketPrice
+    .getLatestForStarport(new mongoose.Types.ObjectId(req.params.id))
+    .then(function (marketPrices) {
+      return res.json(marketPrices);
+    }, function (err) {
+      return res.send(500, err);
     });
 };
 

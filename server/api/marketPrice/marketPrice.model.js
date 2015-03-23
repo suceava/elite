@@ -25,4 +25,58 @@ var MarketPriceSchema = new Schema({
   createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: false }
 });
 
+
+/* Static methods */
+
+/*
+ * Get latest commodity prices for a starport
+ *
+ * @param {ObjectId} starportId
+ * @return {Promise}
+ */
+MarketPriceSchema.statics.getLatestForStarport = function(starportId) {
+  var promise = new mongoose.Promise();
+  var self = this;
+  this
+    .aggregate([
+        { $match: { 'starport': starportId } },
+        { $sort: { 'priceDate': -1 } },
+        { $group: { 
+            _id: '$commodity',
+            commodity: { $first: '$commodity' },
+            priceDate: { $first: '$priceDate' },
+            sellPrice: { $first: '$sellPrice' },
+            buyPrice: { $first: '$buyPrice' },
+            demand: { $first: '$demand' },
+            demandString: { $first: '$demandString' },
+            supply: { $first: '$supply' },
+            supplyString: { $first: '$supplyString' }
+          }
+        }
+      ], function (err, marketPrices) {
+        if (err) {
+console.log(err);
+          promise.reject(err);
+        }
+
+        self
+          .populate(marketPrices, [ { path: 'commodity' } ], function (err, marketPrices) {
+            if (err) {
+console.log(err);
+              promise.reject(err);
+            }
+
+            promise.resolve(null, marketPrices);
+          });
+      });
+
+  return promise;
+
+/*    
+    .find({ 'starport': starportId })
+    .populate('commodity')
+    .sort('commodity.name')
+    .exec();*/
+};
+
 module.exports = mongoose.model('MarketPrice', MarketPriceSchema);
